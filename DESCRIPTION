@@ -2,12 +2,13 @@ Package: maschooldata
 Title: Fetch and Process Massachusetts School Data
 Version: 0.1.0
 Authors@R:
-    person("Al", "Martin", , "almartin@example.com", role = c("aut", "cre"))
+    person("Al", "Martin", email = "almartin@example.com", role = c("aut", "cre"))
+Author: Al Martin <almartin@example.com>
+Maintainer: Al Martin <almartin@example.com>
 Description: Downloads and processes school data from the Massachusetts Department
     of Elementary and Secondary Education (DESE). Provides functions for fetching
-    enrollment data from SIMS (Student Information Management System) and
-    transforming it into tidy format for analysis. Supports data from 2017-2024
-    via direct Excel downloads.
+    enrollment data via the DESE Socrata API (educationtocareer.data.mass.gov) and
+    transforming it into tidy format for analysis. Supports data from 1994-2025.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -23,6 +24,7 @@ Imports:
     tidyr,
     rlang,
     httr,
+    jsonlite,
     rappdirs
 Suggests:
     testthat (>= 3.0.0),
