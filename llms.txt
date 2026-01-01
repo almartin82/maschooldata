@@ -1,0 +1,334 @@
+# maschooldata
+
+**[Documentation](https://almartin82.github.io/maschooldata/)** \|
+**[Getting
+Started](https://almartin82.github.io/maschooldata/articles/quickstart.html)**
+
+Fetch and analyze Massachusetts public school enrollment data from the
+Department of Elementary and Secondary Education (DESE).
+
+## What can you find with maschooldata?
+
+**30+ years of enrollment data (1994-2025).** 920,000 students today.
+Over 400 districts. Here are ten stories hiding in the numbers:
+
+------------------------------------------------------------------------
+
+### 1. Boston’s slow decline
+
+Boston Public Schools has lost over 20,000 students since its peak.
+Today it enrolls around 48,000.
+
+``` r
+library(maschooldata)
+library(dplyr)
+
+enr <- fetch_enr_multi(c(2000, 2005, 2010, 2015, 2020, 2025))
+
+enr %>%
+  filter(is_district, district_id == "0035",
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  select(end_year, district_name, n_students)
+```
+
+![Boston decline](reference/figures/boston-decline.png)
+
+Boston decline
+
+------------------------------------------------------------------------
+
+### 2. Gateway Cities under pressure
+
+Springfield, Worcester, and Lowell are struggling with enrollment while
+demographics shift dramatically.
+
+``` r
+gateway <- c("0281", "0365", "0145")  # Springfield, Worcester, Lowell
+
+enr %>%
+  filter(is_district, district_id %in% gateway,
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  select(end_year, district_name, n_students)
+```
+
+![Gateway cities](reference/figures/gateway-cities.png)
+
+Gateway cities
+
+------------------------------------------------------------------------
+
+### 3. Massachusetts is diversifying fast
+
+The state has gone from 80% white to under 60% white in 25 years.
+Hispanic students now exceed 20%.
+
+``` r
+enr <- fetch_enr_multi(c(2000, 2010, 2020, 2025))
+
+enr %>%
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("white", "black", "hispanic", "asian")) %>%
+  mutate(pct = round(pct * 100, 1)) %>%
+  select(end_year, subgroup, n_students, pct)
+```
+
+![Demographic shift](reference/figures/demographics-shift.png)
+
+Demographic shift
+
+------------------------------------------------------------------------
+
+### 4. The Cape and Islands are graying
+
+Barnstable County (Cape Cod) and Nantucket have seen steep enrollment
+declines as families can’t afford housing.
+
+``` r
+enr_2025 <- fetch_enr(2025)
+
+# Find Cape districts
+enr_2025 %>%
+  filter(is_district, grade_level == "TOTAL", subgroup == "total_enrollment",
+         grepl("Barnstable|Chatham|Dennis|Falmouth|Mashpee|Orleans|Provincetown", district_name)) %>%
+  select(district_name, n_students)
+```
+
+![Cape decline](reference/figures/cape-decline.png)
+
+Cape decline
+
+------------------------------------------------------------------------
+
+### 5. COVID crushed kindergarten
+
+Kindergarten enrollment dropped 10% during the pandemic and hasn’t
+recovered.
+
+``` r
+enr <- fetch_enr_multi(2018:2025)
+
+enr %>%
+  filter(is_state, subgroup == "total_enrollment",
+         grade_level %in% c("K", "01", "06", "12")) %>%
+  select(end_year, grade_level, n_students)
+```
+
+![COVID kindergarten](reference/figures/covid-kindergarten.png)
+
+COVID kindergarten
+
+------------------------------------------------------------------------
+
+### 6. Charter schools serving 45,000+ students
+
+Massachusetts charter enrollment has grown steadily, especially in urban
+areas.
+
+``` r
+enr_2025 %>%
+  filter(is_charter, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  summarize(
+    total_charter = sum(n_students, na.rm = TRUE),
+    n_schools = n()
+  )
+```
+
+![Charter enrollment](reference/figures/charter-enrollment.png)
+
+Charter enrollment
+
+------------------------------------------------------------------------
+
+### 7. One in five students is low-income
+
+The “economically disadvantaged” indicator replaced free/reduced lunch
+in 2015, showing persistent need.
+
+``` r
+enr <- fetch_enr_multi(2015:2025)
+
+enr %>%
+  filter(is_state, subgroup == "econ_disadv", grade_level == "TOTAL") %>%
+  mutate(pct = round(pct * 100, 1)) %>%
+  select(end_year, n_students, pct)
+```
+
+![Economic disadvantage](reference/figures/econ-disadvantage.png)
+
+Economic disadvantage
+
+------------------------------------------------------------------------
+
+### 8. English learners are concentrated in cities
+
+Over 10% of students statewide are English learners, but in some
+districts it’s 30%+.
+
+``` r
+enr_2025 %>%
+  filter(is_district, subgroup == "lep", grade_level == "TOTAL") %>%
+  arrange(desc(pct)) %>%
+  mutate(pct = round(pct * 100, 1)) %>%
+  select(district_name, n_students, pct) %>%
+  head(10)
+```
+
+![EL concentration](reference/figures/el-concentration.png)
+
+EL concentration
+
+------------------------------------------------------------------------
+
+### 9. The suburban ring is holding steady
+
+Newton, Lexington, and Wellesley maintain enrollment while urban cores
+decline.
+
+``` r
+suburbs <- c("0195", "0139", "0325")  # Newton, Lexington, Wellesley
+
+enr <- fetch_enr_multi(2015:2025)
+
+enr %>%
+  filter(is_district, district_id %in% suburbs,
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  select(end_year, district_name, n_students)
+```
+
+![Suburban stability](reference/figures/suburban-stable.png)
+
+Suburban stability
+
+------------------------------------------------------------------------
+
+### 10. Regional school districts dominate rural Massachusetts
+
+Over 50 regional districts serve students from multiple towns, a
+uniquely Massachusetts approach.
+
+``` r
+enr_2025 %>%
+  filter(is_district, grepl("Regional", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  arrange(desc(n_students)) %>%
+  select(district_name, n_students) %>%
+  head(10)
+```
+
+![Regional districts](reference/figures/regional-districts.png)
+
+Regional districts
+
+------------------------------------------------------------------------
+
+## Installation
+
+``` r
+# install.packages("remotes")
+remotes::install_github("almartin82/maschooldata")
+```
+
+## Quick start
+
+``` r
+library(maschooldata)
+library(dplyr)
+
+# Fetch one year
+enr_2025 <- fetch_enr(2025)
+
+# Fetch multiple years
+enr_multi <- fetch_enr_multi(2020:2025)
+
+# State totals
+enr_2025 %>%
+  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL")
+
+# District breakdown
+enr_2025 %>%
+  filter(is_district, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  arrange(desc(n_students))
+
+# Boston demographics
+enr_2025 %>%
+  filter(district_id == "0035", grade_level == "TOTAL",
+         subgroup %in% c("white", "black", "hispanic", "asian")) %>%
+  select(subgroup, n_students, pct)
+```
+
+## Data availability
+
+| Years         | Source           | Notes                        |
+|---------------|------------------|------------------------------|
+| **1994-2025** | DESE Socrata API | 30+ years of consistent data |
+
+Data is accessed via the Massachusetts Education-to-Career Research and
+Data Hub: <https://educationtocareer.data.mass.gov/d/t8td-gens>
+
+### What’s included
+
+- **Levels:** State, District (400+), School (1,800+)
+- **Demographics:** White, Black, Hispanic, Asian, Native American,
+  Pacific Islander (1998+), Multiracial (2003+)
+- **Special populations:** Students with disabilities, English learners,
+  Low income / Economically disadvantaged
+- **Grade levels:** PK through 12, plus SPED beyond Grade 12
+
+### Massachusetts-specific notes
+
+- **District IDs:** 4-digit codes (e.g., 0035 = Boston)
+- **Economic indicator changes:** Pre-2015 used “Low Income”, 2015-2021
+  used “Economically Disadvantaged”, 2022+ uses “Low Income” again
+- **Charter schools:** Included with charter flag for filtering
+- **Regional districts:** Many multi-town districts with “Regional” in
+  name
+
+## Part of the State Schooldata Project
+
+A simple, consistent interface for accessing state-published school data
+in Python and R.
+
+**All 50 state packages:**
+[github.com/almartin82](https://github.com/almartin82?tab=repositories&q=schooldata)
+
+## Author
+
+[Andy Martin](https://github.com/almartin82) (<almartin@gmail.com>)
+
+## License
+
+MIT
+
+# Package index
+
+## Fetch Enrollment Data
+
+Functions for downloading enrollment data from DESE
+
+- [`fetch_enr()`](https://almartin82.github.io/maschooldata/reference/fetch_enr.md)
+  : Fetch Massachusetts enrollment data
+- [`fetch_enr_multi()`](https://almartin82.github.io/maschooldata/reference/fetch_enr_multi.md)
+  : Fetch enrollment data for multiple years
+- [`get_available_years()`](https://almartin82.github.io/maschooldata/reference/get_available_years.md)
+  : Get available years for Massachusetts enrollment data
+
+## Transform Data
+
+Functions for transforming and summarizing enrollment data
+
+- [`tidy_enr()`](https://almartin82.github.io/maschooldata/reference/tidy_enr.md)
+  : Tidy enrollment data
+- [`id_enr_aggs()`](https://almartin82.github.io/maschooldata/reference/id_enr_aggs.md)
+  : Identify enrollment aggregation levels
+- [`enr_grade_aggs()`](https://almartin82.github.io/maschooldata/reference/enr_grade_aggs.md)
+  : Custom Enrollment Grade Level Aggregates
+
+## Caching
+
+Functions for managing local data cache
+
+- [`cache_status()`](https://almartin82.github.io/maschooldata/reference/cache_status.md)
+  : Show cache status
+- [`clear_cache()`](https://almartin82.github.io/maschooldata/reference/clear_cache.md)
+  : Clear the maschooldata cache
+
