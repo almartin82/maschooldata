@@ -1,14 +1,12 @@
 Package: maschooldata
-Title: Fetch and Process Massachusetts School Data
+Title: Massachusetts School Data
 Version: 0.1.0
 Authors@R:
     person("Al", "Martin", email = "almartin@example.com", role = c("aut", "cre"))
 Author: Al Martin <almartin@example.com>
 Maintainer: Al Martin <almartin@example.com>
-Description: Downloads and processes school data from the Massachusetts Department
-    of Elementary and Secondary Education (DESE). Provides functions for fetching
-    enrollment data via the DESE Socrata API (educationtocareer.data.mass.gov) and
-    transforming it into tidy format for analysis. Supports data from 1994-2025.
+Description: A simple, consistent interface for accessing Massachusetts
+    school data in R.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
