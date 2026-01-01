@@ -38,10 +38,6 @@ reference:
       - cache_status
       - clear_cache
 
-  - title: "Package"
-    contents:
-      - maschooldata-package
-
 articles:
   - title: "Getting Started"
     navbar: ~
