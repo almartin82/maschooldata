@@ -37,13 +37,3 @@ reference:
     contents:
       - cache_status
       - clear_cache
-
-articles:
-  - title: "Getting Started"
-    navbar: ~
-    contents:
-      - quickstart
-
-  - title: "Data Quality"
-    contents:
-      - data-quality-qa
