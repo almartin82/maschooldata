@@ -53,7 +53,7 @@ process_district_enr <- function(race_df, special_df, end_year) {
 
   # Filter out rows with invalid org_codes (notes, headers, etc.)
   # Valid org_codes are 4-digit numeric strings, but exclude 0000 (State Totals)
-  race_df <- race_df %>%
+  race_df <- race_df |>
     dplyr::filter(grepl("^[0-9]{4}$", org_code), org_code != "0000")
 
   # Aggregate from grade-level to district-level
@@ -61,8 +61,8 @@ process_district_enr <- function(race_df, special_df, end_year) {
   # Handle columns that may or may not exist
   cols <- names(race_df)
 
-  district_agg <- race_df %>%
-    dplyr::group_by(org_code, district_name, county) %>%
+  district_agg <- race_df |>
+    dplyr::group_by(org_code, district_name, county) |>
     dplyr::summarize(
       row_total = sum(safe_numeric(district_total), na.rm = TRUE),
       black = if ("black" %in% cols) sum(safe_numeric(black), na.rm = TRUE) else NA_real_,
@@ -76,13 +76,13 @@ process_district_enr <- function(race_df, special_df, end_year) {
     )
 
   # Also create grade-level totals for each district
-  grade_totals <- race_df %>%
+  grade_totals <- race_df |>
     dplyr::mutate(
       grade_std = standardize_grade(grade),
       total = safe_numeric(district_total)
-    ) %>%
-    dplyr::filter(!is.na(grade_std)) %>%
-    dplyr::group_by(org_code) %>%
+    ) |>
+    dplyr::filter(!is.na(grade_std)) |>
+    dplyr::group_by(org_code) |>
     dplyr::summarize(
       grade_pk = sum(total[grade_std == "PK"], na.rm = TRUE),
       grade_k = sum(total[grade_std == "K"], na.rm = TRUE),
@@ -109,7 +109,7 @@ process_district_enr <- function(race_df, special_df, end_year) {
     names(special_df) <- standardize_column_names(names(special_df))
 
     # Filter to valid org_codes
-    special_df <- special_df %>%
+    special_df <- special_df |>
       dplyr::filter(grepl("^[0-9]{4}$", org_code))
 
     # Find the relevant columns (names vary by year)
@@ -120,7 +120,7 @@ process_district_enr <- function(race_df, special_df, end_year) {
     total_col <- cols[grepl("^total_enrol", cols, ignore.case = TRUE)][1]
 
     # Build special populations data with available columns
-    special_clean <- special_df %>%
+    special_clean <- special_df |>
       dplyr::transmute(
         org_code = org_code,
         special_ed = if (!is.na(swd_col) && !is.na(total_col)) {
@@ -138,7 +138,7 @@ process_district_enr <- function(race_df, special_df, end_year) {
   }
 
   # Add standard columns
-  result <- result %>%
+  result <- result |>
     dplyr::mutate(
       end_year = end_year,
       type = "District",
@@ -147,7 +147,7 @@ process_district_enr <- function(race_df, special_df, end_year) {
       campus_name = NA_character_,
       charter_flag = NA_character_,
       region = NA_character_
-    ) %>%
+    ) |>
     dplyr::select(
       end_year, type, district_id, campus_id, district_name, campus_name,
       county, region, charter_flag, row_total,
@@ -172,15 +172,15 @@ process_school_enr <- function(race_df, end_year) {
 
   # Filter out rows with invalid school codes (notes, headers, etc.)
   # Valid school codes are 8-digit numeric strings, but exclude 00000000 (State Totals)
-  race_df <- race_df %>%
+  race_df <- race_df |>
     dplyr::filter(grepl("^[0-9]{8}$", school), school != "00000000")
 
   # Aggregate from grade-level to school-level
   # Handle columns that may or may not exist
   cols <- names(race_df)
 
-  school_agg <- race_df %>%
-    dplyr::group_by(org_code, district_name, school, school_name, county) %>%
+  school_agg <- race_df |>
+    dplyr::group_by(org_code, district_name, school, school_name, county) |>
     dplyr::summarize(
       row_total = sum(safe_numeric(school_total), na.rm = TRUE),
       black = if ("black" %in% cols) sum(safe_numeric(black), na.rm = TRUE) else NA_real_,
@@ -194,13 +194,13 @@ process_school_enr <- function(race_df, end_year) {
     )
 
   # Create grade-level totals for each school
-  grade_totals <- race_df %>%
+  grade_totals <- race_df |>
     dplyr::mutate(
       grade_std = standardize_grade(grade),
       total = safe_numeric(school_total)
-    ) %>%
-    dplyr::filter(!is.na(grade_std)) %>%
-    dplyr::group_by(school) %>%
+    ) |>
+    dplyr::filter(!is.na(grade_std)) |>
+    dplyr::group_by(school) |>
     dplyr::summarize(
       grade_pk = sum(total[grade_std == "PK"], na.rm = TRUE),
       grade_k = sum(total[grade_std == "K"], na.rm = TRUE),
@@ -223,7 +223,7 @@ process_school_enr <- function(race_df, end_year) {
   result <- dplyr::left_join(school_agg, grade_totals, by = "school")
 
   # Add standard columns
-  result <- result %>%
+  result <- result |>
     dplyr::mutate(
       end_year = end_year,
       type = "Campus",
@@ -236,7 +236,7 @@ process_school_enr <- function(race_df, end_year) {
       special_ed = NA_integer_,
       lep = NA_integer_,
       econ_disadv = NA_integer_
-    ) %>%
+    ) |>
     dplyr::select(
       end_year, type, district_id, campus_id, district_name, campus_name,
       county, region, charter_flag, row_total,
