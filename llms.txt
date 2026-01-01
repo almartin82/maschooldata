@@ -4,8 +4,8 @@
 **[Getting
 Started](https://almartin82.github.io/maschooldata/articles/quickstart.html)**
 
-Fetch and analyze Massachusetts public school enrollment data from the
-Department of Elementary and Secondary Education (DESE).
+Fetch and analyze Massachusetts school enrollment data from the
+Department of Elementary and Secondary Education (DESE) in R or Python.
 
 ## What can you find with maschooldata?
 
@@ -228,7 +228,9 @@ Regional districts
 remotes::install_github("almartin82/maschooldata")
 ```
 
-## Quick start
+## Quick Start
+
+### R
 
 ``` r
 library(maschooldata)
@@ -254,6 +256,29 @@ enr_2025 %>%
   filter(district_id == "0035", grade_level == "TOTAL",
          subgroup %in% c("white", "black", "hispanic", "asian")) %>%
   select(subgroup, n_students, pct)
+```
+
+### Python
+
+``` python
+import pymaschooldata as ma
+
+# Fetch 2025 data (2024-25 school year)
+enr = ma.fetch_enr(2025)
+
+# Statewide total
+total = enr[(enr['is_state']) & (enr['grade_level'] == 'TOTAL') &
+            (enr['subgroup'] == 'total_enrollment')]['n_students'].sum()
+print(f"{total:,} students")
+#> 920,000 students
+
+# Get multiple years
+enr_multi = ma.fetch_enr_multi([2020, 2021, 2022, 2023, 2024, 2025])
+
+# Check available years
+years = ma.get_available_years()
+print(f"Data available: {years['min_year']}-{years['max_year']}")
+#> Data available: 1994-2025
 ```
 
 ## Data availability
