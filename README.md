@@ -33,8 +33,6 @@ enr %>%
   select(end_year, district_name, n_students)
 ```
 
-![Boston decline](man/figures/boston-decline.png)
-
 ---
 
 ### 2. Gateway Cities under pressure
@@ -49,8 +47,6 @@ enr %>%
          subgroup == "total_enrollment", grade_level == "TOTAL") %>%
   select(end_year, district_name, n_students)
 ```
-
-![Gateway cities](man/figures/gateway-cities.png)
 
 ---
 
@@ -68,8 +64,6 @@ enr %>%
   select(end_year, subgroup, n_students, pct)
 ```
 
-![Demographic shift](man/figures/demographics-shift.png)
-
 ---
 
 ### 4. The Cape and Islands are graying
@@ -86,8 +80,6 @@ enr_2025 %>%
   select(district_name, n_students)
 ```
 
-![Cape decline](man/figures/cape-decline.png)
-
 ---
 
 ### 5. COVID crushed kindergarten
@@ -102,8 +94,6 @@ enr %>%
          grade_level %in% c("K", "01", "06", "12")) %>%
   select(end_year, grade_level, n_students)
 ```
-
-![COVID kindergarten](man/figures/covid-kindergarten.png)
 
 ---
 
@@ -120,8 +110,6 @@ enr_2025 %>%
   )
 ```
 
-![Charter enrollment](man/figures/charter-enrollment.png)
-
 ---
 
 ### 7. One in five students is low-income
@@ -137,8 +125,6 @@ enr %>%
   select(end_year, n_students, pct)
 ```
 
-![Economic disadvantage](man/figures/econ-disadvantage.png)
-
 ---
 
 ### 8. English learners are concentrated in cities
@@ -153,8 +139,6 @@ enr_2025 %>%
   select(district_name, n_students, pct) %>%
   head(10)
 ```
-
-![EL concentration](man/figures/el-concentration.png)
 
 ---
 
@@ -173,8 +157,6 @@ enr %>%
   select(end_year, district_name, n_students)
 ```
 
-![Suburban stability](man/figures/suburban-stable.png)
-
 ---
 
 ### 10. Regional school districts dominate rural Massachusetts
@@ -189,8 +171,6 @@ enr_2025 %>%
   select(district_name, n_students) %>%
   head(10)
 ```
-
-![Regional districts](man/figures/regional-districts.png)
 
 ---
 
