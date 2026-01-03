@@ -1,0 +1,263 @@
+# Massachusetts Enrollment Trends
+
+``` r
+library(maschooldata)
+library(ggplot2)
+library(dplyr)
+library(scales)
+```
+
+``` r
+theme_readme <- function() {
+  theme_minimal(base_size = 14) +
+    theme(
+      plot.title = element_text(face = "bold", size = 16),
+      plot.subtitle = element_text(color = "gray40"),
+      panel.grid.minor = element_blank(),
+      legend.position = "bottom"
+    )
+}
+
+colors <- c("total" = "#2C3E50", "white" = "#3498DB", "black" = "#E74C3C",
+            "hispanic" = "#F39C12", "asian" = "#9B59B6")
+```
+
+``` r
+# Fetch data
+enr <- fetch_enr_multi(2016:2024)
+enr_current <- fetch_enr(2024)
+```
+
+## 1. Boston Public Schools in decline
+
+Boston has seen steady enrollment decline over the past decade, losing
+over 10,000 students.
+
+``` r
+boston <- enr %>%
+  filter(is_district, district_id == "0035",
+         subgroup == "total_enrollment", grade_level == "TOTAL")
+
+ggplot(boston, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.5, color = colors["total"]) +
+  geom_point(size = 3, color = colors["total"]) +
+  scale_y_continuous(labels = comma, limits = c(0, NA)) +
+  labs(title = "Boston Public Schools Enrollment",
+       subtitle = "Steady decline over the past decade",
+       x = "School Year", y = "Students") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/boston-decline-1.png)
+
+## 2. Gateway Cities holding steady
+
+Springfield, Worcester, and Lowell - Massachusetts’ “Gateway Cities” -
+have maintained relatively stable enrollment.
+
+``` r
+gateway <- enr %>%
+  filter(is_district, district_id %in% c("0281", "0365", "0145"),
+         subgroup == "total_enrollment", grade_level == "TOTAL")
+
+ggplot(gateway, aes(x = end_year, y = n_students, color = district_name)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Gateway Cities Enrollment",
+       subtitle = "Springfield, Worcester, and Lowell",
+       x = "School Year", y = "Students", color = "") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/gateway-cities-1.png)
+
+## 3. Massachusetts demographics shift
+
+The state has seen a significant shift in racial/ethnic composition over
+the past decade.
+
+``` r
+demo <- enr %>%
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("white", "black", "hispanic", "asian"))
+
+ggplot(demo, aes(x = end_year, y = pct * 100, color = subgroup)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = colors,
+                     labels = c("Asian", "Black", "Hispanic", "White")) +
+  labs(title = "Massachusetts Demographics Shift",
+       subtitle = "Percent of student population by race/ethnicity",
+       x = "School Year", y = "Percent", color = "") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/demographics-shift-1.png)
+
+## 4. Cape and Islands enrollment declining
+
+Cape Cod and the Islands have seen declining enrollment as seasonal
+communities age.
+
+``` r
+cape <- enr %>%
+  filter(is_district, grepl("Barnstable|Nauset|Monomoy|Martha|Nantucket", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  group_by(end_year) %>%
+  summarize(n_students = sum(n_students, na.rm = TRUE), .groups = "drop")
+
+ggplot(cape, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.5, color = colors["total"]) +
+  geom_point(size = 3, color = colors["total"]) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Cape and Islands Enrollment",
+       subtitle = "Combined enrollment for Cape Cod and Island districts",
+       x = "School Year", y = "Students") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/cape-decline-1.png)
+
+## 5. COVID hit kindergarten hardest
+
+The pandemic caused a sharp drop in kindergarten enrollment in 2020-21
+that has persisted.
+
+``` r
+k_trend <- enr %>%
+  filter(is_state, subgroup == "total_enrollment",
+         grade_level %in% c("K", "01", "06", "12")) %>%
+  mutate(grade_label = case_when(
+    grade_level == "K" ~ "Kindergarten",
+    grade_level == "01" ~ "Grade 1",
+    grade_level == "06" ~ "Grade 6",
+    grade_level == "12" ~ "Grade 12"
+  ))
+
+ggplot(k_trend, aes(x = end_year, y = n_students, color = grade_label)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  geom_vline(xintercept = 2021, linetype = "dashed", color = "red", alpha = 0.5) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "COVID Impact on Grade-Level Enrollment",
+       subtitle = "Kindergarten hit hardest in 2020-21",
+       x = "School Year", y = "Students", color = "") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/covid-kindergarten-1.png)
+
+## 6. Charter school enrollment growing
+
+Massachusetts charter schools continue to expand, serving over 40,000
+students.
+
+``` r
+charter <- enr %>%
+  filter(is_charter, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  group_by(end_year) %>%
+  summarize(n_students = sum(n_students, na.rm = TRUE), .groups = "drop")
+
+ggplot(charter, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.5, color = colors["total"]) +
+  geom_point(size = 3, color = colors["total"]) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Massachusetts Charter School Enrollment",
+       subtitle = "Total students across all charter schools",
+       x = "School Year", y = "Students") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/charter-enrollment-1.png)
+
+## 7. Economic disadvantage trends
+
+The percentage of students classified as economically disadvantaged has
+fluctuated over the years.
+
+``` r
+econ <- enr %>%
+  filter(is_state, subgroup == "econ_disadv", grade_level == "TOTAL")
+
+ggplot(econ, aes(x = end_year, y = pct * 100)) +
+  geom_line(linewidth = 1.5, color = colors["total"]) +
+  geom_point(size = 3, color = colors["total"]) +
+  labs(title = "Economically Disadvantaged Students",
+       subtitle = "Percent of MA students classified as economically disadvantaged",
+       x = "School Year", y = "Percent") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/econ-disadvantage-1.png)
+
+## 8. English Learner concentration
+
+English Learners are concentrated in urban districts, with Boston
+leading the state.
+
+``` r
+el <- enr_current %>%
+  filter(is_district, subgroup == "lep", grade_level == "TOTAL") %>%
+  arrange(desc(n_students)) %>%
+  head(10) %>%
+  mutate(district_label = reorder(district_name, n_students))
+
+ggplot(el, aes(x = district_label, y = n_students)) +
+  geom_col(fill = colors["total"]) +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(title = "English Learners by District",
+       subtitle = "Top 10 districts by number of EL students",
+       x = "", y = "English Learner Students") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/el-concentration-1.png)
+
+## 9. Wealthy suburbs remain stable
+
+Districts like Newton, Lexington, and Wellesley have maintained
+relatively stable enrollment.
+
+``` r
+suburbs <- enr %>%
+  filter(is_district, district_id %in% c("0195", "0139", "0325"),
+         subgroup == "total_enrollment", grade_level == "TOTAL")
+
+ggplot(suburbs, aes(x = end_year, y = n_students, color = district_name)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Suburban Ring Enrollment",
+       subtitle = "Newton, Lexington, and Wellesley",
+       x = "School Year", y = "Students", color = "") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/suburban-stable-1.png)
+
+## 10. Regional districts serve rural Massachusetts
+
+Regional school districts consolidate resources across rural
+communities.
+
+``` r
+regional <- enr_current %>%
+  filter(is_district, grepl("Regional", district_name),
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  arrange(desc(n_students)) %>%
+  head(10) %>%
+  mutate(district_label = reorder(district_name, n_students))
+
+ggplot(regional, aes(x = district_label, y = n_students)) +
+  geom_col(fill = colors["total"]) +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Regional School Districts",
+       subtitle = "Top 10 regional districts by enrollment",
+       x = "", y = "Students") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/regional-districts-1.png)

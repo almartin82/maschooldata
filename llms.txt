@@ -357,3 +357,9 @@ Functions for managing local data cache
 - [`clear_cache()`](https://almartin82.github.io/maschooldata/reference/clear_cache.md)
   : Clear the maschooldata cache
 
+# Articles
+
+### All vignettes
+
+- [Massachusetts Enrollment
+  Trends](https://almartin82.github.io/maschooldata/articles/enrollment-trends.md):
