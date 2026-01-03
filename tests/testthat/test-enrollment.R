@@ -172,18 +172,18 @@ test_that("historical data (2000) works via API", {
   expect_true(nrow(result) > 0)
 })
 
-test_that("most recent year (2025) works via API", {
+test_that("most recent year (2024) works via API", {
   skip_on_cran()
   skip_if_offline()
 
-  result <- fetch_enr(2025, tidy = FALSE, use_cache = FALSE)
+  result <- fetch_enr(2024, tidy = FALSE, use_cache = FALSE)
 
   expect_true(is.data.frame(result))
   expect_true("State" %in% result$type)
   expect_true("District" %in% result$type)
   expect_true(nrow(result) > 0)
 
-  # Check 2025 has the expected state total (should be around 915,000)
+  # Check 2024 has the expected state total (should be around 915,000)
   state_row <- result[result$type == "State", ]
   expect_true(nrow(state_row) == 1)
   expect_true(state_row$row_total > 800000)
