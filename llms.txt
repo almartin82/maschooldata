@@ -31,7 +31,8 @@ enr %>%
   select(end_year, district_name, n_students)
 ```
 
-![Boston decline](reference/figures/boston-decline.png)
+![Boston
+decline](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/boston-decline-1.png)
 
 Boston decline
 
@@ -51,7 +52,8 @@ enr %>%
   select(end_year, district_name, n_students)
 ```
 
-![Gateway cities](reference/figures/gateway-cities.png)
+![Gateway
+cities](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/gateway-cities-1.png)
 
 Gateway cities
 
@@ -72,7 +74,8 @@ enr %>%
   select(end_year, subgroup, n_students, pct)
 ```
 
-![Demographic shift](reference/figures/demographics-shift.png)
+![Demographic
+shift](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/demographics-shift-1.png)
 
 Demographic shift
 
@@ -93,7 +96,8 @@ enr_2025 %>%
   select(district_name, n_students)
 ```
 
-![Cape decline](reference/figures/cape-decline.png)
+![Cape
+decline](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/cape-decline-1.png)
 
 Cape decline
 
@@ -113,7 +117,8 @@ enr %>%
   select(end_year, grade_level, n_students)
 ```
 
-![COVID kindergarten](reference/figures/covid-kindergarten.png)
+![COVID
+kindergarten](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/covid-kindergarten-1.png)
 
 COVID kindergarten
 
@@ -133,7 +138,8 @@ enr_2025 %>%
   )
 ```
 
-![Charter enrollment](reference/figures/charter-enrollment.png)
+![Charter
+enrollment](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/charter-enrollment-1.png)
 
 Charter enrollment
 
@@ -153,7 +159,8 @@ enr %>%
   select(end_year, n_students, pct)
 ```
 
-![Economic disadvantage](reference/figures/econ-disadvantage.png)
+![Economic
+disadvantage](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/econ-disadvantage-1.png)
 
 Economic disadvantage
 
@@ -173,7 +180,8 @@ enr_2025 %>%
   head(10)
 ```
 
-![EL concentration](reference/figures/el-concentration.png)
+![EL
+concentration](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/el-concentration-1.png)
 
 EL concentration
 
@@ -195,7 +203,8 @@ enr %>%
   select(end_year, district_name, n_students)
 ```
 
-![Suburban stability](reference/figures/suburban-stable.png)
+![Suburban
+stability](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/suburban-stable-1.png)
 
 Suburban stability
 
@@ -215,7 +224,8 @@ enr_2025 %>%
   head(10)
 ```
 
-![Regional districts](reference/figures/regional-districts.png)
+![Regional
+districts](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/regional-districts-1.png)
 
 Regional districts
 
