@@ -22,6 +22,15 @@ Functions for transforming and summarizing enrollment data
 - [`enr_grade_aggs()`](https://almartin82.github.io/maschooldata/reference/enr_grade_aggs.md)
   : Custom Enrollment Grade Level Aggregates
 
+## School Classification
+
+Functions for identifying school types (charter, etc.)
+
+- [`get_charter_codes()`](https://almartin82.github.io/maschooldata/reference/get_charter_codes.md)
+  : Get charter school codes
+- [`get_charter_district_codes()`](https://almartin82.github.io/maschooldata/reference/get_charter_district_codes.md)
+  : Get charter district codes
+
 ## Caching
 
 Functions for managing local data cache

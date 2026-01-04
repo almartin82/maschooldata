@@ -8,6 +8,7 @@
 <url><loc>https://almartin82.github.io/maschooldata/authors.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/index.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/DESE_SOCRATA_API.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/MASSGIS_SCHOOLS_URL.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/build_enrollment_url.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/build_special_pop_url.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/cache_exists.html</loc></url>
@@ -24,10 +25,14 @@
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_available_years.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_cache_dir.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_cache_path.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/get_charter_codes.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/get_charter_district_codes.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_raw_enr.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_raw_enr_api.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/get_school_types.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/id_enr_aggs.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/index.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/is_charter_org.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/maschooldata-package.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/process_district_enr.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/process_enr.html</loc></url>

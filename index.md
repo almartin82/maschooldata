@@ -126,7 +126,7 @@ areas.
 
 ``` r
 enr_2025 %>%
-  filter(is_charter, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  filter(is_charter, is_campus, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
   summarize(
     total_charter = sum(n_students, na.rm = TRUE),
     n_schools = n()

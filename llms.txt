@@ -126,7 +126,7 @@ areas.
 
 ``` r
 enr_2025 %>%
-  filter(is_charter, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  filter(is_charter, is_campus, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
   summarize(
     total_charter = sum(n_students, na.rm = TRUE),
     n_schools = n()
@@ -347,6 +347,15 @@ Functions for transforming and summarizing enrollment data
   : Identify enrollment aggregation levels
 - [`enr_grade_aggs()`](https://almartin82.github.io/maschooldata/reference/enr_grade_aggs.md)
   : Custom Enrollment Grade Level Aggregates
+
+## School Classification
+
+Functions for identifying school types (charter, etc.)
+
+- [`get_charter_codes()`](https://almartin82.github.io/maschooldata/reference/get_charter_codes.md)
+  : Get charter school codes
+- [`get_charter_district_codes()`](https://almartin82.github.io/maschooldata/reference/get_charter_district_codes.md)
+  : Get charter district codes
 
 ## Caching
 
