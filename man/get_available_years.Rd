@@ -11,7 +11,7 @@ Integer vector of available school years (end year)
 }
 \description{
 Returns the range of school years for which enrollment data is available
-from the DESE Socrata API. Data is available from 1994-2025.
+from the DESE Socrata API. Data is available from 1994-2024.
 }
 \details{
 Note: Years 1992-1993 exist in the API but have very limited data
@@ -19,5 +19,5 @@ Note: Years 1992-1993 exist in the API but have very limited data
 }
 \examples{
 get_available_years()
-# Returns: 1994, 1995, ..., 2024, 2025
+# Returns: 1994, 1995, ..., 2023, 2024
 }

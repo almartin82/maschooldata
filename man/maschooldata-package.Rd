@@ -61,6 +61,7 @@ Data is sourced from the Massachusetts DESE website:
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://almartin82.github.io/maschooldata}
   \item \url{https://github.com/almartin82/maschooldata}
   \item Report bugs at \url{https://github.com/almartin82/maschooldata/issues}
 }
