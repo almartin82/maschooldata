@@ -125,6 +125,11 @@ process_enr_api <- function(api_data, end_year) {
   org_name <- safe_col(api_data, "org_name")
   total_cnt <- safe_num(safe_col(api_data, "total_cnt"))
 
+  # Get charter codes once (cached) for efficient lookup
+  charter_school_codes <- get_charter_codes(use_cache = TRUE)
+  charter_district_codes <- get_charter_district_codes(use_cache = TRUE)
+  all_charter_codes <- c(charter_school_codes, charter_district_codes)
+
   # Build processed data frame
   processed <- data.frame(
     end_year = end_year,
@@ -164,7 +169,14 @@ process_enr_api <- function(api_data, end_year) {
     # Placeholders for fields not in API
     county = NA_character_,
     region = NA_character_,
-    charter_flag = NA_character_,
+
+    # Charter flag from MassGIS school types lookup
+    # Uses org_code for schools, dist_code for districts
+    charter_flag = dplyr::if_else(
+      dplyr::coalesce(org_code, dist_code) %in% all_charter_codes,
+      "Y",
+      "N"
+    ),
 
     # Total enrollment
     row_total = total_cnt,
