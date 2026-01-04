@@ -71,6 +71,8 @@ Data is sourced from the Massachusetts DESE website:
 
 Useful links:
 
+- <https://almartin82.github.io/maschooldata>
+
 - <https://github.com/almartin82/maschooldata>
 
 - Report bugs at <https://github.com/almartin82/maschooldata/issues>

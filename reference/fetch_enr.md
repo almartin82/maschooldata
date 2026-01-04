@@ -51,7 +51,7 @@ enr_wide <- fetch_enr(2024, tidy = FALSE)
 enr_fresh <- fetch_enr(2024, use_cache = FALSE)
 
 # Filter to Boston Public Schools
-boston <- enr_2025 %>%
+boston <- enr_2025 |>
   dplyr::filter(district_id == "0035")
 } # }
 ```
