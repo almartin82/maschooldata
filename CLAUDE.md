@@ -113,4 +113,4 @@ PRs auto-merge when ALL CI checks pass:
 - Python tests (if py{st}schooldata exists)
 - pkgdown build (vignettes must render)
 
-If CI fails, fix the issue and push - auto-merge triggers when checks pass.
+If CI fails, fix the issue and push - auto-merge will trigger when checks pass.
