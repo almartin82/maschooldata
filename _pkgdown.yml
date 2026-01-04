@@ -36,6 +36,12 @@ reference:
       - id_enr_aggs
       - enr_grade_aggs
 
+  - title: "School Classification"
+    desc: "Functions for identifying school types (charter, etc.)"
+    contents:
+      - get_charter_codes
+      - get_charter_district_codes
+
   - title: "Caching"
     desc: "Functions for managing local data cache"
     contents:

@@ -120,7 +120,7 @@ ggsave("man/figures/covid-kindergarten.png", p, width = 10, height = 6, dpi = 15
 # 6. Charter enrollment
 message("Creating charter chart...")
 charter <- enr %>%
-  filter(is_charter, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  filter(is_charter, is_campus, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
   group_by(end_year) %>%
   summarize(n_students = sum(n_students, na.rm = TRUE), n_schools = n())
 
