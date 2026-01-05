@@ -10,7 +10,7 @@ Department of Elementary and Secondary Education (DESE) in R or Python.
 ## What can you find with maschooldata?
 
 **30+ years of enrollment data (1994-2025).** 920,000 students today.
-Over 400 districts. Here are ten stories hiding in the numbers:
+Over 400 districts. Here are fifteen stories hiding in the numbers:
 
 ------------------------------------------------------------------------
 
@@ -228,6 +228,113 @@ enr_2025 %>%
 districts](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/regional-districts-1.png)
 
 Regional districts
+
+------------------------------------------------------------------------
+
+### 11. Springfield’s demographic transformation
+
+Springfield, the state’s third-largest district, has seen Hispanic
+students become the majority over the past decade.
+
+``` r
+enr <- fetch_enr_multi(2016:2025)
+
+enr %>%
+  filter(is_district, district_id == "0281", grade_level == "TOTAL",
+         subgroup %in% c("white", "black", "hispanic", "asian")) %>%
+  mutate(pct = round(pct * 100, 1)) %>%
+  select(end_year, subgroup, pct)
+```
+
+![Springfield
+demographics](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/springfield-demographics-1.png)
+
+Springfield demographics
+
+------------------------------------------------------------------------
+
+### 12. Fall River and New Bedford: SouthCoast struggles
+
+Two former mill cities with similar trajectories - persistent economic
+challenges and declining enrollment.
+
+``` r
+southcoast <- c("0079", "0192")  # Fall River, New Bedford
+
+enr %>%
+  filter(is_district, district_id %in% southcoast,
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  select(end_year, district_name, n_students)
+```
+
+![SouthCoast
+cities](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/southcoast-cities-1.png)
+
+SouthCoast cities
+
+------------------------------------------------------------------------
+
+### 13. Worcester suburbs are growing
+
+While Worcester holds steady, its suburban ring - Shrewsbury,
+Westborough, Grafton - shows consistent growth.
+
+``` r
+worcester_ring <- c("0270", "0330", "0097")  # Shrewsbury, Westborough, Grafton
+
+enr %>%
+  filter(is_district, district_id %in% worcester_ring,
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  select(end_year, district_name, n_students)
+```
+
+![Worcester
+suburbs](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/worcester-suburbs-1.png)
+
+Worcester suburbs
+
+------------------------------------------------------------------------
+
+### 14. Western MA faces population decline
+
+Pioneer Valley and Berkshire counties have seen persistent enrollment
+declines as young families move east or out of state.
+
+``` r
+western <- c("0199", "0003", "0211", "0098")  # Northampton, Amherst, Pittsfield, Great Barrington
+
+enr %>%
+  filter(is_district, district_id %in% western,
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  group_by(end_year) %>%
+  summarize(total = sum(n_students, na.rm = TRUE))
+```
+
+![Western MA
+decline](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/western-ma-decline-1.png)
+
+Western MA decline
+
+------------------------------------------------------------------------
+
+### 15. Special education rates vary widely by district
+
+Some districts identify nearly 25% of students for special education
+services, while others are under 15%.
+
+``` r
+enr_2025 %>%
+  filter(is_district, subgroup == "sped", grade_level == "TOTAL") %>%
+  arrange(desc(pct)) %>%
+  mutate(pct = round(pct * 100, 1)) %>%
+  select(district_name, n_students, pct) %>%
+  head(15)
+```
+
+![SPED
+rates](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/sped-gender-1.png)
+
+SPED rates
 
 ------------------------------------------------------------------------
 
