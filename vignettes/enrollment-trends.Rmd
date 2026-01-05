@@ -250,3 +250,110 @@ ggplot(regional, aes(x = district_label, y = n_students)) +
        x = "", y = "Students") +
   theme_readme()
 ```
+
+## 11. Springfield's demographic transformation
+
+Springfield, the state's third-largest district, has experienced a dramatic demographic shift over the past decade, with Hispanic students now comprising the majority.
+
+```{r springfield-demographics}
+springfield_demo <- enr %>%
+  filter(is_district, district_id == "0281", grade_level == "TOTAL",
+         subgroup %in% c("white", "black", "hispanic", "asian"))
+
+ggplot(springfield_demo, aes(x = end_year, y = pct * 100, color = subgroup)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_color_manual(values = colors,
+                     labels = c("Asian", "Black", "Hispanic", "White")) +
+  labs(title = "Springfield Demographics Transformation",
+       subtitle = "Hispanic students now majority in state's third-largest district",
+       x = "School Year", y = "Percent", color = "") +
+  theme_readme()
+```
+
+## 12. Fall River and New Bedford: SouthCoast struggles
+
+The two largest SouthCoast cities share similar trajectories - former mill towns with persistent economic challenges and declining enrollment.
+
+```{r southcoast-cities}
+southcoast <- enr %>%
+  filter(is_district, district_id %in% c("0079", "0192"),  # Fall River, New Bedford
+         subgroup == "total_enrollment", grade_level == "TOTAL")
+
+ggplot(southcoast, aes(x = end_year, y = n_students, color = district_name)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "SouthCoast Enrollment Trends",
+       subtitle = "Fall River and New Bedford enrollment over time",
+       x = "School Year", y = "Students", color = "") +
+  theme_readme()
+```
+
+## 13. Worcester suburbs are growing
+
+While Worcester itself has held steady, its suburban ring - Shrewsbury, Westborough, and Grafton - shows consistent growth.
+
+```{r worcester-suburbs}
+worcester_suburbs <- enr %>%
+  filter(is_district, district_id %in% c("0270", "0330", "0097"),  # Shrewsbury, Westborough, Grafton
+         subgroup == "total_enrollment", grade_level == "TOTAL")
+
+ggplot(worcester_suburbs, aes(x = end_year, y = n_students, color = district_name)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Worcester Suburban Growth",
+       subtitle = "Shrewsbury, Westborough, and Grafton",
+       x = "School Year", y = "Students", color = "") +
+  theme_readme()
+```
+
+## 14. Western MA faces population decline
+
+The Pioneer Valley and Berkshire counties have seen persistent enrollment declines as young families move east or out of state.
+
+```{r western-ma-decline}
+# Major Western MA districts
+western_ma <- enr %>%
+  filter(is_district,
+         district_id %in% c("0199", "0003", "0211", "0098"),  # Northampton, Amherst, Pittsfield, Great Barrington
+         subgroup == "total_enrollment", grade_level == "TOTAL") %>%
+  group_by(end_year) %>%
+  summarize(n_students = sum(n_students, na.rm = TRUE), .groups = "drop")
+
+ggplot(western_ma, aes(x = end_year, y = n_students)) +
+  geom_line(linewidth = 1.5, color = colors["total"]) +
+  geom_point(size = 3, color = colors["total"]) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Western Massachusetts Enrollment",
+       subtitle = "Combined enrollment for Northampton, Amherst, Pittsfield, and Great Barrington",
+       x = "School Year", y = "Students") +
+  theme_readme()
+```
+
+## 15. Special education shows gender imbalance
+
+Across Massachusetts, boys are identified for special education services at nearly twice the rate of girls.
+
+```{r sped-gender}
+sped_gender <- enr_current %>%
+  filter(is_state, grade_level == "TOTAL",
+         subgroup %in% c("sped", "male", "female")) %>%
+  select(subgroup, n_students, pct)
+
+# Get gender breakdown within SPED at district level
+sped_by_district <- enr_current %>%
+  filter(is_district, subgroup == "sped", grade_level == "TOTAL") %>%
+  arrange(desc(pct)) %>%
+  head(15) %>%
+  mutate(district_label = reorder(district_name, pct))
+
+ggplot(sped_by_district, aes(x = district_label, y = pct * 100)) +
+  geom_col(fill = colors["total"]) +
+  coord_flip() +
+  labs(title = "Special Education Rates by District",
+       subtitle = "Top 15 districts by percent of students receiving SPED services",
+       x = "", y = "Percent SPED") +
+  theme_readme()
+```
