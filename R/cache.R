@@ -31,12 +31,12 @@ get_cache_dir <- function() {
 #' Get cache file path for given year and type
 #'
 #' @param end_year School year end
-#' @param type Data type ("tidy" or "wide")
+#' @param type Data type ("enr_tidy", "enr_wide", "grad_tidy", "grad_wide")
 #' @return Full path to cache file
 #' @keywords internal
 get_cache_path <- function(end_year, type) {
   cache_dir <- get_cache_dir()
-  file.path(cache_dir, paste0("enr_", type, "_", end_year, ".rds"))
+  file.path(cache_dir, paste0(type, "_", end_year, ".rds"))
 }
 
 
@@ -93,7 +93,8 @@ write_cache <- function(df, end_year, type) {
 #' Removes cached data files.
 #'
 #' @param end_year Optional school year to clear. If NULL, clears all years.
-#' @param type Optional data type to clear. If NULL, clears all types.
+#' @param type Optional data type to clear ("enr_tidy", "enr_wide", "grad_tidy", "grad_wide").
+#'   If NULL, clears all types.
 #' @return Invisibly returns the number of files removed
 #' @export
 #' @examples
@@ -104,8 +105,8 @@ write_cache <- function(df, end_year, type) {
 #' # Clear only 2024 data
 #' clear_cache(2024)
 #'
-#' # Clear only tidy format data
-#' clear_cache(type = "tidy")
+#' # Clear only graduation tidy data
+#' clear_cache(type = "grad_tidy")
 #' }
 clear_cache <- function(end_year = NULL, type = NULL) {
   cache_dir <- get_cache_dir()
@@ -119,7 +120,7 @@ clear_cache <- function(end_year = NULL, type = NULL) {
     files <- list.files(cache_dir, pattern = paste0("_", end_year, "\\.rds$"), full.names = TRUE)
   } else if (!is.null(type)) {
     # Clear all years for type
-    files <- list.files(cache_dir, pattern = paste0("^enr_", type, "_"), full.names = TRUE)
+    files <- list.files(cache_dir, pattern = paste0("^", type, "_"), full.names = TRUE)
   } else {
     # Clear all
     files <- list.files(cache_dir, pattern = "\\.rds$", full.names = TRUE)
@@ -157,8 +158,18 @@ cache_status <- function() {
 
   info <- file.info(files)
   info$file <- basename(files)
-  info$year <- as.integer(gsub(".*_(\\d{4})\\.rds$", "\\1", info$file))
-  info$type <- gsub("^enr_(.*)_\\d{4}\\.rds$", "\\1", info$file)
+
+  # Parse filename: {datatype}_{format}_{year}.rds
+  # e.g., enr_tidy_2024.rds, grad_wide_2023.rds
+  # Use strsplit for simpler parsing
+  filename_parts <- strsplit(gsub("\\.rds$", "", info$file), "_")
+
+  # Extract components
+  info$data_type <- sapply(filename_parts, `[`, 1)  # enr or grad
+  info$format <- sapply(filename_parts, `[`, 2)    # tidy or wide
+  info$year <- as.integer(sapply(filename_parts, `[`, 3))
+  info$type <- paste(info$data_type, info$format, sep = "_")  # enr_tidy, grad_wide
+
   info$size_mb <- round(info$size / 1024 / 1024, 2)
   info$age_days <- round(as.numeric(difftime(Sys.time(), info$mtime, units = "days")), 1)
 

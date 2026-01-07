@@ -140,3 +140,106 @@ Example for maschooldata:
 ```
 
 **Why:** Vignette figures regenerate automatically when pkgdown builds. Manual `man/figures/` requires running a separate script and is easy to forget, causing stale/broken images.
+
+---
+
+## Graduation Rate Data (Stage 1 Research Complete)
+
+### Data Source: Socrata API
+- **Dataset:** High School Graduation Rates (ID: n2xa-p822)
+- **API Endpoint:** `https://educationtocareer.data.mass.gov/resource/n2xa-p822.json`
+- **Years Available:** 2006-2024 (19 years)
+- **HTTP Status:** 200 OK (verified 2026-01-07)
+- **Documentation:** See `/Users/almartin/Documents/state-schooldata/docs/MA-GRADUATION-RESEARCH.md`
+
+### Schema Details
+
+**Column Names (consistent across all 19 years):**
+- `sy` - School year end (e.g., "2024")
+- `dist_code` - District code (8 digits, e.g., "00350000")
+- `dist_name` - District name
+- `org_code` - Organization code (8 digits)
+- `org_name` - Organization name
+- `org_type` - "State", "District", or "School"
+- `grad_rate_type` - "4-Year Graduation Rate", "4-Year Adjusted Cohort", "5-Year Graduation Rate", "5-Year Adjusted Cohort"
+- `stu_grp` - Student subgroup (16 categories)
+- `cohort_cnt` - Cohort count
+- `grad_pct` - Graduation percentage (decimal, e.g., 0.884 = 88.4%)
+- `in_sch_pct` - Still in school percentage
+- `non_grad_pct` - Non-graduate completers percentage
+- `ged_pct` - GED percentage
+- `drpout_pct` - Dropout percentage
+- `exclud_pct` - Permanently excluded percentage
+
+**Total Columns:** 15
+**Schema Changes:** NONE - identical schema across all 19 years
+
+### Graduation Rate Types
+
+1. **4-Year Graduation Rate** (2006-2024) - Standard rate
+2. **4-Year Adjusted Cohort Graduation Rate** (2006-2024) - Federal standard
+3. **5-Year Graduation Rate** (2006-2022 only) - Discontinued after 2022
+4. **5-Year Adjusted Cohort Graduation Rate** (2006-2022 only) - Discontinued after 2022
+
+### Student Subgroups (16 categories)
+
+All Students, American Indian or Alaska Native, Asian, Black or African American, English Learners, Female, Foster Care, High Needs, Hispanic or Latino, Homeless, Low Income, Male, Multi-Race Not Hispanic or Latino, Native Hawaiian or Other Pacific Islander, Students with Disabilities, White
+
+### ID System
+
+- **State:** `00000000`
+- **District:** 8 digits (e.g., Boston = "00350000")
+- **School:** 8 digits, composite of district + school (e.g., Boston Latin = "00350560")
+- **All IDs must be character type** to preserve leading zeros
+
+### Verified Data Values (for Tests)
+
+**State-Level 4-Year Graduation Rates:**
+- 2007: 80.9% (0.809), cohort 75,912
+- 2018: 87.9% (0.879), cohort 74,641
+- 2024: 88.4% (0.884), cohort 73,046
+
+**Boston District (dist_code=00350000):**
+- 2007: 57.9% (0.579), cohort 4,940
+- 2024: 79.7% (0.797), cohort 3,711
+
+**Boston Latin School (org_code=00350560):**
+- 2024: 98.7% (0.987), cohort 385
+
+### Implementation Status
+
+- [x] Stage 1: Research complete (2026-01-07)
+- [ ] Stage 2: TDD - Write tests (next step)
+- [ ] Stage 3: Implement functions
+- [ ] Stage 4: Documentation and validation
+
+### Implementation Notes
+
+- **Same pattern as enrollment:** Both use Socrata API at educationtocareer.data.mass.gov
+- **No new dependencies:** Use existing httr, jsonlite, dplyr, tidyr
+- **Data types:** All values come as strings from JSON, need conversion
+- **Quality:** Excellent - no nulls, proper schema, consistent formatting
+- **Complexity:** LOW - template exists from enrollment implementation
+
+### Query Examples
+
+```r
+# Get all 2024 data
+url <- "https://educationtocareer.data.mass.gov/resource/n2xa-p822.json?$where=sy='2024'&$limit=50000"
+
+# Get state-level only
+url <- "https://educationtocareer.data.mass.gov/resource/n2xa-p822.json?$where=sy='2024' AND org_type='State'&$limit=50000"
+
+# Get specific district
+url <- "https://educationtocareer.data.mass.gov/resource/n2xa-p822.json?$where=sy='2024' AND dist_code='00350000'&$limit=50000"
+```
+
+### Full Research Documentation
+
+See `/Users/almartin/Documents/state-schooldata/docs/MA-GRADUATION-RESEARCH.md` for complete research details including:
+- Downloaded sample data for 5 years
+- Cross-year comparison
+- Data quality analysis
+- Test values for fidelity tests
+- API access patterns
+- Tidy transformation schema

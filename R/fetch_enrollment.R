@@ -56,7 +56,7 @@ fetch_enr <- function(end_year, tidy = TRUE, use_cache = TRUE) {
   }
 
   # Determine cache type based on tidy parameter
-  cache_type <- if (tidy) "tidy" else "wide"
+  cache_type <- if (tidy) "enr_tidy" else "enr_wide"
 
   # Check cache first
   if (use_cache && cache_exists(end_year, cache_type)) {
