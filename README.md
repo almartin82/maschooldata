@@ -281,14 +281,54 @@ enr_2025 %>%
 
 ---
 
-## Installation
+### 16. Four-year graduation rates improving statewide
+
+Massachusetts' 4-year graduation rate has climbed from 81% in 2006 to 88% in 2024, with persistent gaps by race and income.
 
 ```r
-# install.packages("remotes")
-remotes::install_github("almartin82/maschooldata")
+library(maschooldata)
+library(dplyr)
+
+grad <- fetch_graduation_multi(2006:2024)
+
+grad %>%
+  filter(is_state, subgroup == "all", cohort_type == "4-year") %>%
+  select(end_year, grad_rate, cohort_count) %>%
+  mutate(rate_pct = round(grad_rate * 100, 1))
 ```
 
-## Quick Start
+### 17. Urban-suburban graduation gaps persist
+
+Boston (80%) trails Newton (95%) by 15 percentage points, reflecting opportunity gaps across the state.
+
+```r
+grad_2024 <- fetch_graduation(2024)
+
+grad_2024 %>%
+  filter(is_district,
+         district_name %in% c("Boston", "Springfield", "Worcester", "Newton"),
+         subgroup == "all",
+         cohort_type == "4-year") %>%
+  select(district_name, grad_rate, cohort_count) %>%
+  mutate(rate_pct = round(grad_rate * 100, 1))
+```
+
+### 18. Special populations face graduation challenges
+
+English learners (67%) and students with disabilities (75%) graduate at lower rates than peers.
+
+```r
+grad_2024 %>%
+  filter(is_state,
+         subgroup %in% c("english_learner", "special_ed", "low_income"),
+         cohort_type == "4-year") %>%
+  select(subgroup, grad_rate, cohort_count) %>%
+  mutate(rate_pct = round(grad_rate * 100, 1))
+```
+
+---
+
+## Installation
 
 ### R
 
@@ -339,23 +379,44 @@ enr_multi = ma.fetch_enr_multi([2020, 2021, 2022, 2023, 2024, 2025])
 years = ma.get_available_years()
 print(f"Data available: {years['min_year']}-{years['max_year']}")
 #> Data available: 1994-2025
+
+# Fetch graduation rates
+grad = ma.fetch_graduation(2024)
+
+# State graduation rate
+state_rate = grad[(grad['is_state']) & (grad['subgroup'] == 'all') &
+                  (grad['cohort_type'] == '4-year')]['grad_rate'].values[0]
+print(f"State graduation rate: {state_rate * 100:.1f}%")
+#> State graduation rate: 88.4%
+
+# Get multiple years of graduation data
+grad_multi = ma.fetch_graduation_multi([2020, 2021, 2022, 2023, 2024])
 ```
 
 ## Data availability
 
-| Years | Source | Notes |
-|-------|--------|-------|
-| **1994-2025** | DESE Socrata API | 30+ years of consistent data |
+| Data Type | Years | Source | Notes |
+|-----------|-------|--------|-------|
+| **Enrollment** | 1994-2025 | DESE Socrata API | 30+ years of consistent data |
+| **Graduation rates** | 2006-2024 | DESE Socrata API | 4-year and 5-year rates by subgroup |
 
 Data is accessed via the Massachusetts Education-to-Career Research and Data Hub:
-https://educationtocareer.data.mass.gov/d/t8td-gens
+- Enrollment: https://educationtocareer.data.mass.gov/d/t8td-gens
+- Graduation: https://educationtocareer.data.mass.gov/d/n2xa-p822
 
 ### What's included
 
+#### Enrollment data
 - **Levels:** State, District (400+), School (1,800+)
 - **Demographics:** White, Black, Hispanic, Asian, Native American, Pacific Islander (1998+), Multiracial (2003+)
 - **Special populations:** Students with disabilities, English learners, Low income / Economically disadvantaged
 - **Grade levels:** PK through 12, plus SPED beyond Grade 12
+
+#### Graduation rate data
+- **Levels:** State, District, School
+- **Cohort types:** 4-year, 5-year graduation rates
+- **Subgroups:** All students, race/ethnicity, gender, English learners, special education, low income, high needs
+- **Outcomes:** Graduation rate, cohort count, still in school, GED, dropout, non-graduate completers
 
 ### Massachusetts-specific notes
 

@@ -29,6 +29,13 @@ reference:
       - fetch_enr_multi
       - get_available_years
 
+  - title: "Fetch Graduation Data"
+    desc: "Functions for downloading graduation rate data from DESE"
+    contents:
+      - fetch_graduation
+      - fetch_graduation_multi
+      - get_available_grad_years
+
   - title: "Transform Data"
     desc: "Functions for transforming and summarizing enrollment data"
     contents:

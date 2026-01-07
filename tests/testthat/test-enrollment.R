@@ -52,11 +52,11 @@ test_that("get_cache_dir returns valid path", {
 
 test_that("cache functions work correctly", {
   # Test cache path generation
-  path <- get_cache_path(2024, "tidy")
+  path <- get_cache_path(2024, "enr_tidy")
   expect_true(grepl("enr_tidy_2024.rds", path))
 
   # Test cache_exists returns FALSE for non-existent cache
-  expect_false(cache_exists(9999, "tidy"))
+  expect_false(cache_exists(9999, "enr_tidy"))
 })
 
 # Integration tests (require network access)
