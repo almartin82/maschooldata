@@ -153,6 +153,98 @@
 <p>Example for maschooldata:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="al">![Charter enrollment](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/charter-enrollment-1.png)</span></span></code></pre></div>
 <p><strong>Why:</strong> Vignette figures regenerate automatically when pkgdown builds. Manual <code>man/figures/</code> requires running a separate script and is easy to forget, causing stale/broken images.</p>
+<hr></div>
+<div class="section level2">
+<h2 id="graduation-rate-data-stage-1-research-complete">Graduation Rate Data (Stage 1 Research Complete)<a class="anchor" aria-label="anchor" href="#graduation-rate-data-stage-1-research-complete"></a></h2>
+<div class="section level3">
+<h3 id="data-source-socrata-api">Data Source: Socrata API<a class="anchor" aria-label="anchor" href="#data-source-socrata-api"></a></h3>
+<ul><li>
+<strong>Dataset:</strong> High School Graduation Rates (ID: n2xa-p822)</li>
+<li>
+<strong>API Endpoint:</strong> <code>https://educationtocareer.data.mass.gov/resource/n2xa-p822.json</code>
+</li>
+<li>
+<strong>Years Available:</strong> 2006-2024 (19 years)</li>
+<li>
+<strong>HTTP Status:</strong> 200 OK (verified 2026-01-07)</li>
+<li>
+<strong>Documentation:</strong> See <code>/Users/almartin/Documents/state-schooldata/docs/MA-GRADUATION-RESEARCH.md</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="schema-details">Schema Details<a class="anchor" aria-label="anchor" href="#schema-details"></a></h3>
+<p><strong>Column Names (consistent across all 19 years):</strong> - <code>sy</code> - School year end (e.g., “2024”) - <code>dist_code</code> - District code (8 digits, e.g., “00350000”) - <code>dist_name</code> - District name - <code>org_code</code> - Organization code (8 digits) - <code>org_name</code> - Organization name - <code>org_type</code> - “State”, “District”, or “School” - <code>grad_rate_type</code> - “4-Year Graduation Rate”, “4-Year Adjusted Cohort”, “5-Year Graduation Rate”, “5-Year Adjusted Cohort” - <code>stu_grp</code> - Student subgroup (16 categories) - <code>cohort_cnt</code> - Cohort count - <code>grad_pct</code> - Graduation percentage (decimal, e.g., 0.884 = 88.4%) - <code>in_sch_pct</code> - Still in school percentage - <code>non_grad_pct</code> - Non-graduate completers percentage - <code>ged_pct</code> - GED percentage - <code>drpout_pct</code> - Dropout percentage - <code>exclud_pct</code> - Permanently excluded percentage</p>
+<p><strong>Total Columns:</strong> 15 <strong>Schema Changes:</strong> NONE - identical schema across all 19 years</p>
+</div>
+<div class="section level3">
+<h3 id="graduation-rate-types">Graduation Rate Types<a class="anchor" aria-label="anchor" href="#graduation-rate-types"></a></h3>
+<ol style="list-style-type: decimal"><li>
+<strong>4-Year Graduation Rate</strong> (2006-2024) - Standard rate</li>
+<li>
+<strong>4-Year Adjusted Cohort Graduation Rate</strong> (2006-2024) - Federal standard</li>
+<li>
+<strong>5-Year Graduation Rate</strong> (2006-2022 only) - Discontinued after 2022</li>
+<li>
+<strong>5-Year Adjusted Cohort Graduation Rate</strong> (2006-2022 only) - Discontinued after 2022</li>
+</ol></div>
+<div class="section level3">
+<h3 id="student-subgroups-16-categories">Student Subgroups (16 categories)<a class="anchor" aria-label="anchor" href="#student-subgroups-16-categories"></a></h3>
+<p>All Students, American Indian or Alaska Native, Asian, Black or African American, English Learners, Female, Foster Care, High Needs, Hispanic or Latino, Homeless, Low Income, Male, Multi-Race Not Hispanic or Latino, Native Hawaiian or Other Pacific Islander, Students with Disabilities, White</p>
+</div>
+<div class="section level3">
+<h3 id="id-system">ID System<a class="anchor" aria-label="anchor" href="#id-system"></a></h3>
+<ul><li>
+<strong>State:</strong> <code>00000000</code>
+</li>
+<li>
+<strong>District:</strong> 8 digits (e.g., Boston = “00350000”)</li>
+<li>
+<strong>School:</strong> 8 digits, composite of district + school (e.g., Boston Latin = “00350560”)</li>
+<li>
+<strong>All IDs must be character type</strong> to preserve leading zeros</li>
+</ul></div>
+<div class="section level3">
+<h3 id="verified-data-values-for-tests">Verified Data Values (for Tests)<a class="anchor" aria-label="anchor" href="#verified-data-values-for-tests"></a></h3>
+<p><strong>State-Level 4-Year Graduation Rates:</strong> - 2007: 80.9% (0.809), cohort 75,912 - 2018: 87.9% (0.879), cohort 74,641 - 2024: 88.4% (0.884), cohort 73,046</p>
+<p><strong>Boston District (dist_code=00350000):</strong> - 2007: 57.9% (0.579), cohort 4,940 - 2024: 79.7% (0.797), cohort 3,711</p>
+<p><strong>Boston Latin School (org_code=00350560):</strong> - 2024: 98.7% (0.987), cohort 385</p>
+</div>
+<div class="section level3">
+<h3 id="implementation-status">Implementation Status<a class="anchor" aria-label="anchor" href="#implementation-status"></a></h3>
+<ul class="task-list"><li><label><input type="checkbox" checked>Stage 1: Research complete (2026-01-07)</label></li>
+<li><label><input type="checkbox">Stage 2: TDD - Write tests (next step)</label></li>
+<li><label><input type="checkbox">Stage 3: Implement functions</label></li>
+<li><label><input type="checkbox">Stage 4: Documentation and validation</label></li>
+</ul></div>
+<div class="section level3">
+<h3 id="implementation-notes">Implementation Notes<a class="anchor" aria-label="anchor" href="#implementation-notes"></a></h3>
+<ul><li>
+<strong>Same pattern as enrollment:</strong> Both use Socrata API at educationtocareer.data.mass.gov</li>
+<li>
+<strong>No new dependencies:</strong> Use existing httr, jsonlite, dplyr, tidyr</li>
+<li>
+<strong>Data types:</strong> All values come as strings from JSON, need conversion</li>
+<li>
+<strong>Quality:</strong> Excellent - no nulls, proper schema, consistent formatting</li>
+<li>
+<strong>Complexity:</strong> LOW - template exists from enrollment implementation</li>
+</ul></div>
+<div class="section level3">
+<h3 id="query-examples">Query Examples<a class="anchor" aria-label="anchor" href="#query-examples"></a></h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get all 2024 data</span></span>
+<span><span class="va">url</span> <span class="op">&lt;-</span> <span class="st">"https://educationtocareer.data.mass.gov/resource/n2xa-p822.json?$where=sy='2024'&amp;$limit=50000"</span></span>
+<span></span>
+<span><span class="co"># Get state-level only</span></span>
+<span><span class="va">url</span> <span class="op">&lt;-</span> <span class="st">"https://educationtocareer.data.mass.gov/resource/n2xa-p822.json?$where=sy='2024' AND org_type='State'&amp;$limit=50000"</span></span>
+<span></span>
+<span><span class="co"># Get specific district</span></span>
+<span><span class="va">url</span> <span class="op">&lt;-</span> <span class="st">"https://educationtocareer.data.mass.gov/resource/n2xa-p822.json?$where=sy='2024' AND dist_code='00350000'&amp;$limit=50000"</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="full-research-documentation">Full Research Documentation<a class="anchor" aria-label="anchor" href="#full-research-documentation"></a></h3>
+<p>See <code>/Users/almartin/Documents/state-schooldata/docs/MA-GRADUATION-RESEARCH.md</code> for complete research details including: - Downloaded sample data for 5 years - Cross-year comparison - Data quality analysis - Test values for fidelity tests - API access patterns - Tidy transformation schema</p>
+</div>
 </div>
 </div>
 
