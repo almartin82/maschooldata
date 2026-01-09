@@ -9,7 +9,7 @@ get_cache_path(end_year, type)
 \arguments{
 \item{end_year}{School year end}
 
-\item{type}{Data type ("tidy" or "wide")}
+\item{type}{Data type ("enr_tidy", "enr_wide", "grad_tidy", "grad_wide")}
 }
 \value{
 Full path to cache file

@@ -1452,7 +1452,7 @@ test_that("District cohort counts are non-zero for major districts", {
                     cohort_type == "4-year") |>
       dplyr::pull(cohort_count)
 
-    expect_true(cohort > 0, info = paste("District:", dist))
+    expect_true(cohort > 0)
   }
 })
 

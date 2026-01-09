@@ -17,7 +17,6 @@ if (getRversion() >= "2.15.1") {
     "native_american", "pacific_islander", "white",
     "grade", "grade_std", "total",
     "district_id", "campus_id", "campus_name", "region",
-    "row_total", "school", "school_name", "school_total",
-    "%>%"  # magrittr pipe operator
+    "row_total", "school", "school_name", "school_total"
   ))
 }

@@ -56,7 +56,7 @@ get_raw_graduation <- function(end_year) {
 
   url <- paste0(
     DESE_GRAD_SOCRATA_API,
-    "?sy=", end_year,
+    "?$where=sy='", end_year, "'",
     "&$limit=50000",  # High limit to get all records
     "&$order=org_code"
   )
