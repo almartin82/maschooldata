@@ -1,9 +1,4 @@
-### CONCURRENT TASK LIMIT
-- **Maximum 5 background tasks running simultaneously**
-- When launching multiple agents (e.g., for mass audits), batch them in groups of 5
-- Wait for the current batch to complete before launching the next batch
-
----
+# state-schooldata
 
 ## CRITICAL DATA SOURCE RULES
 
@@ -11,12 +6,64 @@
 
 ---
 
-# Claude Code Instructions
+### CONCURRENT TASK LIMIT
+- **Maximum 5 background tasks running simultaneously**
+- When launching multiple agents (e.g., for mass audits), batch them in groups of 5
+- Wait for the current batch to complete before launching the next batch
 
-### GIT COMMIT POLICY
-- Commits are allowed
-- NO Claude Code attribution, NO Co-Authored-By trailers, NO emojis
-- Write normal commit messages as if a human wrote them
+---
+
+## Git Commits and PRs
+- NEVER reference Claude, Claude Code, or AI assistance in commit messages
+- NEVER reference Claude, Claude Code, or AI assistance in PR descriptions
+- NEVER add Co-Authored-By lines mentioning Claude or Anthropic
+- Keep commit messages focused on what changed, not how it was written
+
+---
+
+## Git Workflow (REQUIRED)
+
+### Feature Branch + PR + Auto-Merge Policy
+
+**NEVER push directly to main.** All changes must go through PRs with auto-merge:
+
+```bash
+# 1. Create feature branch
+git checkout -b fix/description-of-change
+
+# 2. Make changes, commit
+git add -A
+git commit -m "Fix: description of change"
+
+# 3. Push and create PR with auto-merge
+git push -u origin fix/description-of-change
+gh pr create --title "Fix: description" --body "Description of changes"
+gh pr merge --auto --squash
+
+# 4. Clean up stale branches after PR merges
+git checkout main && git pull && git fetch --prune origin
+```
+
+### Branch Cleanup (REQUIRED)
+
+**Clean up stale branches every time you touch this package:**
+
+```bash
+# Delete local branches merged to main
+git branch --merged main | grep -v main | xargs -r git branch -d
+
+# Prune remote tracking branches
+git fetch --prune origin
+```
+
+### Auto-Merge Requirements
+
+PRs auto-merge when ALL CI checks pass:
+- R-CMD-check (0 errors, 0 warnings)
+- Python tests (if py{st}schooldata exists)
+- pkgdown build (vignettes must render)
+
+If CI fails, fix the issue and push - auto-merge triggers when checks pass.
 
 ---
 
@@ -74,53 +121,15 @@ This package includes `tests/testthat/test-pipeline-live.R` with LIVE network te
 devtools::test(filter = "pipeline-live")
 ```
 
-See `state-schooldata/CLAUDE.md` for complete testing framework documentation.
-
 ---
 
-## Git Workflow (REQUIRED)
+## Fidelity Requirement
 
-### Feature Branch + PR + Auto-Merge Policy
-
-**NEVER push directly to main.** All changes must go through PRs with auto-merge:
-
-```bash
-# 1. Create feature branch
-git checkout -b fix/description-of-change
-
-# 2. Make changes, commit
-git add -A
-git commit -m "Fix: description of change"
-
-# 3. Push and create PR with auto-merge
-git push -u origin fix/description-of-change
-gh pr create --title "Fix: description" --body "Description of changes"
-gh pr merge --auto --squash
-
-# 4. Clean up stale branches after PR merges
-git checkout main && git pull && git fetch --prune origin
-```
-
-### Branch Cleanup (REQUIRED)
-
-**Clean up stale branches every time you touch this package:**
-
-```bash
-# Delete local branches merged to main
-git branch --merged main | grep -v main | xargs -r git branch -d
-
-# Prune remote tracking branches
-git fetch --prune origin
-```
-
-### Auto-Merge Requirements
-
-PRs auto-merge when ALL CI checks pass:
-- R-CMD-check (0 errors, 0 warnings)
-- Python tests (if py{st}schooldata exists)
-- pkgdown build (vignettes must render)
-
-If CI fails, fix the issue and push - auto-merge will trigger when checks pass.
+**tidy=TRUE MUST maintain fidelity to raw, unprocessed data:**
+- Enrollment counts in tidy format must exactly match the wide format
+- No rounding or transformation of counts during tidying
+- Percentages are calculated fresh but counts are preserved
+- State aggregates are sums of school-level data
 
 ---
 
@@ -134,95 +143,84 @@ README images MUST come from pkgdown-generated vignette output so they auto-upda
 ![Chart name](https://almartin82.github.io/{package}/articles/{vignette}_files/figure-html/{chunk-name}-1.png)
 ```
 
-Example for maschooldata:
-```markdown
-![Charter enrollment](https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/charter-enrollment-1.png)
-```
-
 **Why:** Vignette figures regenerate automatically when pkgdown builds. Manual `man/figures/` requires running a separate script and is easy to forget, causing stale/broken images.
 
 ---
 
-## Graduation Rate Data (Stage 1 Research Complete)
+## README and Vignette Code Matching (REQUIRED)
 
-### Data Source: Socrata API
-- **Dataset:** High School Graduation Rates (ID: n2xa-p822)
-- **API Endpoint:** `https://educationtocareer.data.mass.gov/resource/n2xa-p822.json`
-- **Years Available:** 2006-2024 (19 years)
-- **HTTP Status:** 200 OK (verified 2026-01-07)
-- **Documentation:** See `/Users/almartin/Documents/state-schooldata/docs/MA-GRADUATION-RESEARCH.md`
+**CRITICAL RULE (as of 2026-01-08):** ALL code blocks in the README MUST match code in a vignette EXACTLY (1:1 correspondence).
 
-### Schema Details
+### Why This Matters
 
-**Column Names (consistent across all 19 years):**
-- `sy` - School year end (e.g., "2024")
-- `dist_code` - District code (8 digits, e.g., "00350000")
-- `dist_name` - District name
-- `org_code` - Organization code (8 digits)
-- `org_name` - Organization name
-- `org_type` - "State", "District", or "School"
-- `grad_rate_type` - "4-Year Graduation Rate", "4-Year Adjusted Cohort", "5-Year Graduation Rate", "5-Year Adjusted Cohort"
-- `stu_grp` - Student subgroup (16 categories)
-- `cohort_cnt` - Cohort count
-- `grad_pct` - Graduation percentage (decimal, e.g., 0.884 = 88.4%)
-- `in_sch_pct` - Still in school percentage
-- `non_grad_pct` - Non-graduate completers percentage
-- `ged_pct` - GED percentage
-- `drpout_pct` - Dropout percentage
-- `exclud_pct` - Permanently excluded percentage
+The Idaho fix revealed critical bugs when README code didn't match vignettes:
+- Wrong district names (lowercase vs ALL CAPS)
+- Text claims that contradicted actual data
+- Missing data output in examples
 
-**Total Columns:** 15
-**Schema Changes:** NONE - identical schema across all 19 years
+### README Story Structure (REQUIRED)
 
-### Graduation Rate Types
+Every story/section in the README MUST follow this structure:
 
-1. **4-Year Graduation Rate** (2006-2024) - Standard rate
-2. **4-Year Adjusted Cohort Graduation Rate** (2006-2024) - Federal standard
-3. **5-Year Graduation Rate** (2006-2022 only) - Discontinued after 2022
-4. **5-Year Adjusted Cohort Graduation Rate** (2006-2022 only) - Discontinued after 2022
+1. **Claim**: A factual statement about the data
+2. **Explication**: Brief explanation of why this matters
+3. **Code**: R code that fetches and analyzes the data (MUST exist in a vignette)
+4. **Code Output**: Data table/print statement showing actual values (REQUIRED)
+5. **Visualization**: Chart from vignette (auto-generated from pkgdown)
 
-### Student Subgroups (16 categories)
+### Enforcement
 
-All Students, American Indian or Alaska Native, Asian, Black or African American, English Learners, Female, Foster Care, High Needs, Hispanic or Latino, Homeless, Low Income, Male, Multi-Race Not Hispanic or Latino, Native Hawaiian or Other Pacific Islander, Students with Disabilities, White
+The `state-deploy` skill verifies this before deployment:
+- Extracts all README code blocks
+- Searches vignettes for EXACT matches
+- Fails deployment if code not found in vignettes
+- Randomly audits packages for claim accuracy
 
-### ID System
+### What This Prevents
 
-- **State:** `00000000`
-- **District:** 8 digits (e.g., Boston = "00350000")
-- **School:** 8 digits, composite of district + school (e.g., Boston Latin = "00350560")
-- **All IDs must be character type** to preserve leading zeros
+- Wrong district/entity names (case sensitivity, typos)
+- Text claims that contradict data
+- Broken code that fails silently
+- Missing data output
+- Verified, accurate, reproducible examples
 
-### Verified Data Values (for Tests)
+---
 
-**State-Level 4-Year Graduation Rates:**
-- 2007: 80.9% (0.809), cohort 75,912
-- 2018: 87.9% (0.879), cohort 74,641
-- 2024: 88.4% (0.884), cohort 73,046
+# maschooldata
 
-**Boston District (dist_code=00350000):**
-- 2007: 57.9% (0.579), cohort 4,940
-- 2024: 79.7% (0.797), cohort 3,711
+## Data Source: Massachusetts Department of Education
 
-**Boston Latin School (org_code=00350560):**
-- 2024: 98.7% (0.987), cohort 385
+**Enrollment Data:** Socrata API at educationtocareer.data.mass.gov
+- Dataset: Enrollment by School (ID: 2b93-ctuo)
+- Years Available: 2002-2025
+- ID System: 8-digit codes (State=00000000, District=dist_code, School=org_code)
 
-### Implementation Status
+**Graduation Rate Data:** Socrata API at educationtocareer.data.mass.gov
+- Dataset: High School Graduation Rates (ID: n2xa-p822)
+- Years Available: 2006-2024 (19 years)
+- Documentation: `/Users/almartin/Documents/state-schooldata/docs/MA-GRADUATION-RESEARCH.md`
 
+## Graduation Rate Implementation
+
+### Status
 - [x] Stage 1: Research complete (2026-01-07)
-- [ ] Stage 2: TDD - Write tests (next step)
+- [ ] Stage 2: TDD - Write tests
 - [ ] Stage 3: Implement functions
 - [ ] Stage 4: Documentation and validation
 
-### Implementation Notes
+### Schema
+- **Years:** 2006-2024 (19 years)
+- **Columns:** 15 (consistent across all years)
+- **Graduation Types:** 4-Year Rate, 4-Year Adjusted Cohort, 5-Year Rate (2006-2022 only), 5-Year Adjusted Cohort (2006-2022 only)
+- **Subgroups:** 16 categories (All Students, English Learners, High Needs, etc.)
+- **ID Format:** 8-digit character codes (preserve leading zeros)
 
-- **Same pattern as enrollment:** Both use Socrata API at educationtocareer.data.mass.gov
-- **No new dependencies:** Use existing httr, jsonlite, dplyr, tidyr
-- **Data types:** All values come as strings from JSON, need conversion
-- **Quality:** Excellent - no nulls, proper schema, consistent formatting
-- **Complexity:** LOW - template exists from enrollment implementation
+### Verified Test Values
+- State 2024: 88.4% (0.884), cohort 73,046
+- Boston 2024: 79.7% (0.797), cohort 3,711
+- Boston Latin 2024: 98.7% (0.987), cohort 385
 
-### Query Examples
-
+### API Query Examples
 ```r
 # Get all 2024 data
 url <- "https://educationtocareer.data.mass.gov/resource/n2xa-p822.json?$where=sy='2024'&$limit=50000"
@@ -234,142 +232,8 @@ url <- "https://educationtocareer.data.mass.gov/resource/n2xa-p822.json?$where=s
 url <- "https://educationtocareer.data.mass.gov/resource/n2xa-p822.json?$where=sy='2024' AND dist_code='00350000'&$limit=50000"
 ```
 
-### Full Research Documentation
-
-See `/Users/almartin/Documents/state-schooldata/docs/MA-GRADUATION-RESEARCH.md` for complete research details including:
-- Downloaded sample data for 5 years
-- Cross-year comparison
-- Data quality analysis
-- Test values for fidelity tests
-- API access patterns
-- Tidy transformation schema
-
----
-
-## README and Vignette Code Matching (REQUIRED)
-
-**CRITICAL RULE (as of 2026-01-08):** ALL code blocks in the README MUST match code in a vignette EXACTLY (1:1 correspondence).
-
-### Why This Matters
-
-The Idaho fix revealed critical bugs when README code didn't match vignettes:
-- Wrong district names (lowercase vs ALL CAPS)
-- Text claims that contradicted actual data  
-- Missing data output in examples
-
-### README Story Structure (REQUIRED)
-
-Every story/section in the README MUST follow this structure:
-
-1. **Claim**: A factual statement about the data
-2. **Explication**: Brief explanation of why this matters
-3. **Code**: R code that fetches and analyzes the data (MUST exist in a vignette)
-4. **Code Output**: Data table/print statement showing actual values (REQUIRED)
-5. **Visualization**: Chart from vignette (auto-generated from pkgdown)
-
-### Enforcement
-
-The `state-deploy` skill verifies this before deployment:
-- Extracts all README code blocks
-- Searches vignettes for EXACT matches
-- Fails deployment if code not found in vignettes
-- Randomly audits packages for claim accuracy
-
-### What This Prevents
-
-- ❌ Wrong district/entity names (case sensitivity, typos)
-- ❌ Text claims that contradict data
-- ❌ Broken code that fails silently
-- ❌ Missing data output
-- ✅ Verified, accurate, reproducible examples
-
-### Example
-
-```markdown
-### 1. State enrollment grew 28% since 2002
-
-State added 68,000 students from 2002 to 2026, bucking national trends.
-
-```r
-library(arschooldata)
-library(dplyr)
-
-enr <- fetch_enr_multi(2002:2026)
-
-enr %>%
-  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
-  select(end_year, n_students) %>%
-  filter(end_year %in% c(2002, 2026)) %>%
-  mutate(change = n_students - lag(n_students),
-         pct_change = round((n_students / lag(n_students) - 1) * 100, 1))
-# Prints: 2002=XXX, 2026=YYY, change=ZZZ, pct=PP.P%
-```
-
-![Chart](https://almartin82.github.io/arschooldata/articles/...)
-```
-
-
----
-
-## README and Vignette Code Matching (REQUIRED)
-
-**CRITICAL RULE (as of 2026-01-08):** ALL code blocks in the README MUST match code in a vignette EXACTLY (1:1 correspondence).
-
-### Why This Matters
-
-The Idaho fix revealed critical bugs when README code didn't match vignettes:
-- Wrong district names (lowercase vs ALL CAPS)
-- Text claims that contradicted actual data  
-- Missing data output in examples
-
-### README Story Structure (REQUIRED)
-
-Every story/section in the README MUST follow this structure:
-
-1. **Claim**: A factual statement about the data
-2. **Explication**: Brief explanation of why this matters
-3. **Code**: R code that fetches and analyzes the data (MUST exist in a vignette)
-4. **Code Output**: Data table/print statement showing actual values (REQUIRED)
-5. **Visualization**: Chart from vignette (auto-generated from pkgdown)
-
-### Enforcement
-
-The `state-deploy` skill verifies this before deployment:
-- Extracts all README code blocks
-- Searches vignettes for EXACT matches
-- Fails deployment if code not found in vignettes
-- Randomly audits packages for claim accuracy
-
-### What This Prevents
-
-- ❌ Wrong district/entity names (case sensitivity, typos)
-- ❌ Text claims that contradict data
-- ❌ Broken code that fails silently
-- ❌ Missing data output
-- ✅ Verified, accurate, reproducible examples
-
-### Example
-
-```markdown
-### 1. State enrollment grew 28% since 2002
-
-State added 68,000 students from 2002 to 2026, bucking national trends.
-
-```r
-library(idschooldata)
-library(dplyr)
-
-enr <- fetch_enr_multi(2002:2026)
-
-enr %>%
-  filter(is_state, subgroup == "total_enrollment", grade_level == "TOTAL") %>%
-  select(end_year, n_students) %>%
-  filter(end_year %in% c(2002, 2026)) %>%
-  mutate(change = n_students - lag(n_students),
-         pct_change = round((n_students / lag(n_students) - 1) * 100, 1))
-# Prints: 2002=XXX, 2026=YYY, change=ZZZ, pct=PP.P%
-```
-
-![Chart](https://almartin82.github.io/idschooldata/articles/...)
-```
-
+### Implementation Notes
+- Same pattern as enrollment (Socrata API)
+- No new dependencies (httr, jsonlite, dplyr, tidyr)
+- All values come as strings from JSON, need conversion
+- Complexity: LOW (template exists from enrollment implementation)
