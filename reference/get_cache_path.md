@@ -16,7 +16,7 @@ get_cache_path(end_year, type)
 
 - type:
 
-  Data type ("tidy" or "wide")
+  Data type ("enr_tidy", "enr_wide", "grad_tidy", "grad_wide")
 
 ## Value
 

@@ -54,7 +54,8 @@
 
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
-<dd><p>Optional data type to clear. If NULL, clears all types.</p></dd>
+<dd><p>Optional data type to clear ("enr_tidy", "enr_wide", "grad_tidy", "grad_wide").
+If NULL, clears all types.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -71,8 +72,8 @@
 <span class="r-in"><span><span class="co"># Clear only 2024 data</span></span></span>
 <span class="r-in"><span><span class="fu">clear_cache</span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Clear only tidy format data</span></span></span>
-<span class="r-in"><span><span class="fu">clear_cache</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"tidy"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Clear only graduation tidy data</span></span></span>
+<span class="r-in"><span><span class="fu">clear_cache</span><span class="op">(</span>type <span class="op">=</span> <span class="st">"grad_tidy"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

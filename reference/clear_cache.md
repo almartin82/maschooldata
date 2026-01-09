@@ -16,7 +16,8 @@ clear_cache(end_year = NULL, type = NULL)
 
 - type:
 
-  Optional data type to clear. If NULL, clears all types.
+  Optional data type to clear ("enr_tidy", "enr_wide", "grad_tidy",
+  "grad_wide"). If NULL, clears all types.
 
 ## Value
 
@@ -32,7 +33,7 @@ clear_cache()
 # Clear only 2024 data
 clear_cache(2024)
 
-# Clear only tidy format data
-clear_cache(type = "tidy")
+# Clear only graduation tidy data
+clear_cache(type = "grad_tidy")
 } # }
 ```
