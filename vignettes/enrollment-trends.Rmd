@@ -43,8 +43,8 @@ colors <- c("total" = "#2C3E50", "white" = "#3498DB", "black" = "#E74C3C",
 
 ```{r fetch-data}
 # Fetch data
-enr <- fetch_enr_multi(2016:2024)
-enr_current <- fetch_enr(2024)
+enr <- fetch_enr_multi(2016:2024, use_cache = TRUE)
+enr_current <- fetch_enr(2024, use_cache = TRUE)
 ```
 
 ## 1. Boston Public Schools in decline
