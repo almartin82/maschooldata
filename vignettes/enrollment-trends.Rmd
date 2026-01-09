@@ -41,7 +41,7 @@ colors <- c("total" = "#2C3E50", "white" = "#3498DB", "black" = "#E74C3C",
             "hispanic" = "#F39C12", "asian" = "#9B59B6")
 ```
 
-```{r fetch-data, cache = TRUE}
+```{r fetch-data}
 # Fetch data
 enr <- fetch_enr_multi(2016:2024)
 enr_current <- fetch_enr(2024)

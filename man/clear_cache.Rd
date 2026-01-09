@@ -9,7 +9,8 @@ clear_cache(end_year = NULL, type = NULL)
 \arguments{
 \item{end_year}{Optional school year to clear. If NULL, clears all years.}
 
-\item{type}{Optional data type to clear. If NULL, clears all types.}
+\item{type}{Optional data type to clear ("enr_tidy", "enr_wide", "grad_tidy", "grad_wide").
+If NULL, clears all types.}
 }
 \value{
 Invisibly returns the number of files removed
@@ -25,7 +26,7 @@ clear_cache()
 # Clear only 2024 data
 clear_cache(2024)
 
-# Clear only tidy format data
-clear_cache(type = "tidy")
+# Clear only graduation tidy data
+clear_cache(type = "grad_tidy")
 }
 }
