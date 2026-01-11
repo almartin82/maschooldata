@@ -36,6 +36,14 @@ reference:
       - fetch_graduation_multi
       - get_available_grad_years
 
+  - title: "Fetch Assessment Data"
+    desc: "Functions for downloading assessment data from DESE"
+    contents:
+      - fetch_assessment
+      - fetch_assessment_multi
+      - get_available_assess_years
+      - get_available_assess_subgroups
+
   - title: "Transform Data"
     desc: "Functions for transforming and summarizing enrollment data"
     contents:
