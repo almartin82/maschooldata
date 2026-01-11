@@ -534,6 +534,19 @@ Functions for downloading graduation rate data from DESE
 - [`get_available_grad_years()`](https://almartin82.github.io/maschooldata/reference/get_available_grad_years.md)
   : Get available graduation years
 
+## Fetch Assessment Data
+
+Functions for downloading assessment data from DESE
+
+- [`fetch_assessment()`](https://almartin82.github.io/maschooldata/reference/fetch_assessment.md)
+  : Fetch Massachusetts MCAS assessment data
+- [`fetch_assessment_multi()`](https://almartin82.github.io/maschooldata/reference/fetch_assessment_multi.md)
+  : Fetch assessment data for multiple years
+- [`get_available_assess_years()`](https://almartin82.github.io/maschooldata/reference/get_available_assess_years.md)
+  : Get available assessment years
+- [`get_available_assess_subgroups()`](https://almartin82.github.io/maschooldata/reference/get_available_assess_subgroups.md)
+  : Get available assessment subgroups
+
 ## Transform Data
 
 Functions for transforming and summarizing enrollment data

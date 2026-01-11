@@ -1,0 +1,73 @@
+# Fetch assessment data for multiple years
+
+Downloads and combines MCAS assessment data for multiple school years.
+
+## Usage
+
+``` r
+fetch_assessment_multi(
+  end_years,
+  grade = NULL,
+  subject = NULL,
+  subgroup = NULL,
+  tidy = TRUE,
+  exclude_aggregated = TRUE,
+  use_cache = TRUE
+)
+```
+
+## Arguments
+
+- end_years:
+
+  Vector of school year ends (e.g., c(2019, 2021, 2022))
+
+- grade:
+
+  Filter by grade level (see fetch_assessment for options)
+
+- subject:
+
+  Filter by subject (see fetch_assessment for options)
+
+- subgroup:
+
+  Filter by student subgroup (see fetch_assessment for options)
+
+- tidy:
+
+  If TRUE (default), returns data in long (tidy) format.
+
+- exclude_aggregated:
+
+  If TRUE (default), excludes aggregated grade rows.
+
+- use_cache:
+
+  If TRUE (default), uses locally cached data when available.
+
+## Value
+
+Combined data frame with assessment data for all requested years
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Get pre-COVID and post-COVID data
+assess_multi <- fetch_assessment_multi(c(2019, 2021, 2022, 2023, 2024, 2025))
+
+# Track COVID recovery in grade 10 math
+assess_multi |>
+  dplyr::filter(is_state, grade == "10", subject == "math", subgroup == "all") |>
+  dplyr::select(end_year, meeting_exceeding_pct, scaled_score)
+
+# Compare district achievement gaps over time
+assess_multi |>
+  dplyr::filter(district_id == "0035",
+               grade == "08",
+               subject == "ela",
+               subgroup %in% c("white", "black", "hispanic")) |>
+  dplyr::select(end_year, subgroup, meeting_exceeding_pct)
+} # }
+```

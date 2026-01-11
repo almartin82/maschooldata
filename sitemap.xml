@@ -7,6 +7,7 @@
 <url><loc>https://almartin82.github.io/maschooldata/articles/index.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/authors.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/index.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/DESE_ASSESS_SOCRATA_API.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/DESE_GRAD_SOCRATA_API.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/DESE_SOCRATA_API.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/MASSGIS_SCHOOLS_URL.html</loc></url>
@@ -21,16 +22,21 @@
 <url><loc>https://almartin82.github.io/maschooldata/reference/end_year_to_folder.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/enr_grade_aggs.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/extract_pct_to_count.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/fetch_assessment.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/fetch_assessment_multi.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/fetch_enr.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/fetch_enr_multi.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/fetch_graduation.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/fetch_graduation_multi.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/get_available_assess_subgroups.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/get_available_assess_years.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_available_grad_years.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_available_years.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_cache_dir.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_cache_path.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_charter_codes.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_charter_district_codes.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/get_raw_assessment.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_raw_enr.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_raw_enr_api.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/get_raw_graduation.html</loc></url>
@@ -39,6 +45,7 @@
 <url><loc>https://almartin82.github.io/maschooldata/reference/index.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/is_charter_org.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/maschooldata-package.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/process_assessment.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/process_district_enr.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/process_enr.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/process_enr_api.html</loc></url>
@@ -48,6 +55,7 @@
 <url><loc>https://almartin82.github.io/maschooldata/reference/safe_numeric.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/standardize_column_names.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/standardize_grade.html</loc></url>
+<url><loc>https://almartin82.github.io/maschooldata/reference/tidy_assessment.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/tidy_enr.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/tidy_graduation.html</loc></url>
 <url><loc>https://almartin82.github.io/maschooldata/reference/write_cache.html</loc></url>
