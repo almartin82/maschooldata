@@ -25,6 +25,5 @@ Thumbs.db
 
 # Test artifacts
 tests/testthat/_snaps/
-
-# Vignette build artifacts
-vignettes/*_cache/
+/doc/
+/Meta/
