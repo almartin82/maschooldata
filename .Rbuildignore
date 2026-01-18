@@ -11,5 +11,5 @@
 ^Meta$
 ^CLAUDE\.md$
 ^PRD\.md$
+^EXPANSION\.md$
 ^py.*schooldata$
-^vignettes/.*_cache/

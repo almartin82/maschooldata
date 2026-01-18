@@ -358,3 +358,9 @@ ggplot(sped_by_district, aes(x = district_label, y = pct * 100)) +
        x = "", y = "Percent SPED") +
   theme_readme()
 ```
+
+## Session Info
+
+```{r session-info}
+sessionInfo()
+```
