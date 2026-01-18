@@ -56,27 +56,40 @@
 </h1></div>
 <!-- badges: start -->
 
-<p><strong><a href="https://almartin82.github.io/maschooldata/">Documentation</a></strong> | <strong><a href="https://almartin82.github.io/maschooldata/articles/quickstart.html">Getting Started</a></strong></p>
-<p>Fetch and analyze Massachusetts school enrollment data from the Department of Elementary and Secondary Education (DESE) in R or Python.</p>
+<p><strong><a href="https://almartin82.github.io/maschooldata/">Documentation</a></strong> | <strong><a href="https://almartin82.github.io/maschooldata/articles/enrollment-trends.html">Getting Started</a></strong></p>
+<p>Fetch and analyze Massachusetts school enrollment and graduation data from the Department of Elementary and Secondary Education (DESE) in R or Python.</p>
+<div class="section level2">
+<h2 id="why-maschooldata">Why maschooldata?<a class="anchor" aria-label="anchor" href="#why-maschooldata"></a>
+</h2>
+<p>Massachusetts publishes detailed school data through their <a href="https://educationtocareer.data.mass.gov/" class="external-link">Education-to-Career Research and Data Hub</a>, but working with Socrata APIs and understanding data structures takes time. This package gives you a clean, consistent interface to 30+ years of enrollment data and 19 years of graduation rates - all with a single function call.</p>
+<p>Part of the <a href="https://github.com/almartin82/njschooldata" class="external-link">njschooldata</a> family of state education data packages, providing consistent interfaces for accessing state DOE data across all 50 states.</p>
+</div>
 <div class="section level2">
 <h2 id="what-can-you-find-with-maschooldata">What can you find with maschooldata?<a class="anchor" aria-label="anchor" href="#what-can-you-find-with-maschooldata"></a>
 </h2>
-<p><strong>30+ years of enrollment data (1994-2025).</strong> 920,000 students today. Over 400 districts. Here are fifteen stories hiding in the numbers:</p>
+<p><strong>30+ years of enrollment data (1994-2024).</strong> 915,000 students today. Over 400 districts. Here are eighteen stories hiding in the numbers:</p>
 <hr>
 <div class="section level3">
 <h3 id="id_1-bostons-slow-decline">1. Boston’s slow decline<a class="anchor" aria-label="anchor" href="#id_1-bostons-slow-decline"></a>
 </h3>
-<p>Boston Public Schools has lost over 20,000 students since its peak. Today it enrolls around 48,000.</p>
+<p>Boston Public Schools has lost over 17,000 students since 2000. Today it enrolls around 46,000.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/maschooldata">maschooldata</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2005</span>, <span class="fl">2010</span>, <span class="fl">2015</span>, <span class="fl">2020</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2005</span>, <span class="fl">2010</span>, <span class="fl">2015</span>, <span class="fl">2020</span>, <span class="fl">2024</span><span class="op">)</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">district_id</span> <span class="op">==</span> <span class="st">"0035"</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   end_year district_name n_students</span></span>
+<span><span class="co">#&gt; 1     2000        Boston      62950</span></span>
+<span><span class="co">#&gt; 2     2005        Boston      57742</span></span>
+<span><span class="co">#&gt; 3     2010        Boston      55371</span></span>
+<span><span class="co">#&gt; 4     2015        Boston      54312</span></span>
+<span><span class="co">#&gt; 5     2020        Boston      50480</span></span>
+<span><span class="co">#&gt; 6     2024        Boston      45742</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/boston-decline-1.png" alt="Boston decline"><div class="figcaption">Boston decline</div>
 </div>
@@ -85,14 +98,33 @@
 <div class="section level3">
 <h3 id="id_2-gateway-cities-under-pressure">2. Gateway Cities under pressure<a class="anchor" aria-label="anchor" href="#id_2-gateway-cities-under-pressure"></a>
 </h3>
-<p>Springfield, Worcester, and Lowell are struggling with enrollment while demographics shift dramatically.</p>
+<p>Springfield, Worcester, and Lowell - Massachusetts’ “Gateway Cities” - have seen different enrollment trajectories.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gateway</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0281"</span>, <span class="st">"0365"</span>, <span class="st">"0145"</span><span class="op">)</span>  <span class="co"># Springfield, Worcester, Lowell</span></span>
+<code class="sourceCode R"><span><span class="va">gateway</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0281"</span>, <span class="st">"0348"</span>, <span class="st">"0160"</span><span class="op">)</span>  <span class="co"># Springfield, Worcester, Lowell</span></span>
 <span></span>
 <span><span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">district_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">gateway</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    end_year district_name n_students</span></span>
+<span><span class="co">#&gt; 1      2000        Lowell      14239</span></span>
+<span><span class="co">#&gt; 2      2000   Springfield      25918</span></span>
+<span><span class="co">#&gt; 3      2000     Worcester      24625</span></span>
+<span><span class="co">#&gt; 4      2005        Lowell      14051</span></span>
+<span><span class="co">#&gt; 5      2005   Springfield      25975</span></span>
+<span><span class="co">#&gt; 6      2005     Worcester      24085</span></span>
+<span><span class="co">#&gt; 7      2010        Lowell      13897</span></span>
+<span><span class="co">#&gt; 8      2010   Springfield      25141</span></span>
+<span><span class="co">#&gt; 9      2010     Worcester      23837</span></span>
+<span><span class="co">#&gt; 10     2015        Lowell      14185</span></span>
+<span><span class="co">#&gt; 11     2015   Springfield      25645</span></span>
+<span><span class="co">#&gt; 12     2015     Worcester      24756</span></span>
+<span><span class="co">#&gt; 13     2020        Lowell      14256</span></span>
+<span><span class="co">#&gt; 14     2020   Springfield      25007</span></span>
+<span><span class="co">#&gt; 15     2020     Worcester      24693</span></span>
+<span><span class="co">#&gt; 16     2024        Lowell      14274</span></span>
+<span><span class="co">#&gt; 17     2024   Springfield      23693</span></span>
+<span><span class="co">#&gt; 18     2024     Worcester      24350</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/gateway-cities-1.png" alt="Gateway cities"><div class="figcaption">Gateway cities</div>
 </div>
@@ -101,15 +133,32 @@
 <div class="section level3">
 <h3 id="id_3-massachusetts-is-diversifying-fast">3. Massachusetts is diversifying fast<a class="anchor" aria-label="anchor" href="#id_3-massachusetts-is-diversifying-fast"></a>
 </h3>
-<p>The state has gone from 80% white to under 60% white in 25 years. Hispanic students now exceed 20%.</p>
+<p>The state has gone from over 70% white to under 55% white in 25 years. Hispanic students now exceed 25%.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2010</span>, <span class="fl">2020</span>, <span class="fl">2025</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2010</span>, <span class="fl">2020</span>, <span class="fl">2024</span><span class="op">)</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"hispanic"</span>, <span class="st">"asian"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pct</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">subgroup</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">subgroup</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    end_year  subgroup n_students  pct</span></span>
+<span><span class="co">#&gt; 1      2000     asian      40287  4.2</span></span>
+<span><span class="co">#&gt; 2      2000     black      79406  8.2</span></span>
+<span><span class="co">#&gt; 3      2000  hispanic      98181 10.2</span></span>
+<span><span class="co">#&gt; 4      2000     white    711046 73.7</span></span>
+<span><span class="co">#&gt; 5      2010     asian      50691  5.3</span></span>
+<span><span class="co">#&gt; 6      2010     black      81458  8.5</span></span>
+<span><span class="co">#&gt; 7      2010  hispanic    139606 14.6</span></span>
+<span><span class="co">#&gt; 8      2010     white    628251 65.6</span></span>
+<span><span class="co">#&gt; 9      2020     asian      63424  6.8</span></span>
+<span><span class="co">#&gt; 10     2020     black      84120  9.1</span></span>
+<span><span class="co">#&gt; 11     2020  hispanic    210668 22.7</span></span>
+<span><span class="co">#&gt; 12     2020     white    508665 54.8</span></span>
+<span><span class="co">#&gt; 13     2024     asian      67707  7.4</span></span>
+<span><span class="co">#&gt; 14     2024     black      87836  9.6</span></span>
+<span><span class="co">#&gt; 15     2024  hispanic    229655 25.1</span></span>
+<span><span class="co">#&gt; 16     2024     white    484928 53.0</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/demographics-shift-1.png" alt="Demographic shift"><div class="figcaption">Demographic shift</div>
 </div>
@@ -118,15 +167,23 @@
 <div class="section level3">
 <h3 id="id_4-the-cape-and-islands-are-graying">4. The Cape and Islands are graying<a class="anchor" aria-label="anchor" href="#id_4-the-cape-and-islands-are-graying"></a>
 </h3>
-<p>Barnstable County (Cape Cod) and Nantucket have seen steep enrollment declines as families can’t afford housing.</p>
+<p>Barnstable County (Cape Cod) and the Islands have seen steep enrollment declines as families can’t afford housing.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">enr_2025</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="fl">2025</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">enr_2024</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Find Cape districts</span></span>
-<span><span class="va">enr_2025</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">enr_2024</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>,</span>
 <span>         <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Barnstable|Chatham|Dennis|Falmouth|Mashpee|Orleans|Provincetown"</span>, <span class="va">district_name</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         district_name n_students</span></span>
+<span><span class="co">#&gt; 1          Barnstable       4026</span></span>
+<span><span class="co">#&gt; 2             Chatham        347</span></span>
+<span><span class="co">#&gt; 3 Dennis-Yarmouth Reg       2609</span></span>
+<span><span class="co">#&gt; 4            Falmouth       2700</span></span>
+<span><span class="co">#&gt; 5             Mashpee       1425</span></span>
+<span><span class="co">#&gt; 6          Nauset Reg       1445</span></span>
+<span><span class="co">#&gt; 7       Provincetown         113</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/cape-decline-1.png" alt="Cape decline"><div class="figcaption">Cape decline</div>
 </div>
@@ -135,14 +192,43 @@
 <div class="section level3">
 <h3 id="id_5-covid-crushed-kindergarten">5. COVID crushed kindergarten<a class="anchor" aria-label="anchor" href="#id_5-covid-crushed-kindergarten"></a>
 </h3>
-<p>Kindergarten enrollment dropped 10% during the pandemic and hasn’t recovered.</p>
+<p>Kindergarten enrollment dropped significantly during the pandemic and hasn’t fully recovered.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2018</span><span class="op">:</span><span class="fl">2025</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2018</span><span class="op">:</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>,</span>
 <span>         <span class="va">grade_level</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K"</span>, <span class="st">"01"</span>, <span class="st">"06"</span>, <span class="st">"12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">grade_level</span>, <span class="va">n_students</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">grade_level</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    end_year grade_level n_students</span></span>
+<span><span class="co">#&gt; 1      2018           K      68958</span></span>
+<span><span class="co">#&gt; 2      2018          01      71026</span></span>
+<span><span class="co">#&gt; 3      2018          06      68706</span></span>
+<span><span class="co">#&gt; 4      2018          12      67800</span></span>
+<span><span class="co">#&gt; 5      2019           K      68197</span></span>
+<span><span class="co">#&gt; 6      2019          01      70048</span></span>
+<span><span class="co">#&gt; 7      2019          06      69143</span></span>
+<span><span class="co">#&gt; 8      2019          12      68169</span></span>
+<span><span class="co">#&gt; 9      2020           K      60689</span></span>
+<span><span class="co">#&gt; 10     2020          01      67709</span></span>
+<span><span class="co">#&gt; 11     2020          06      69068</span></span>
+<span><span class="co">#&gt; 12     2020          12      67912</span></span>
+<span><span class="co">#&gt; 13     2021           K      57994</span></span>
+<span><span class="co">#&gt; 14     2021          01      62527</span></span>
+<span><span class="co">#&gt; 15     2021          06      67892</span></span>
+<span><span class="co">#&gt; 16     2021          12      69126</span></span>
+<span><span class="co">#&gt; 17     2022           K      62215</span></span>
+<span><span class="co">#&gt; 18     2022          01      60813</span></span>
+<span><span class="co">#&gt; 19     2022          06      67584</span></span>
+<span><span class="co">#&gt; 20     2022          12      70110</span></span>
+<span><span class="co">#&gt; 21     2023           K      62050</span></span>
+<span><span class="co">#&gt; 22     2023          01      63702</span></span>
+<span><span class="co">#&gt; 23     2023          06      66584</span></span>
+<span><span class="co">#&gt; 24     2023          12      72239</span></span>
+<span><span class="co">#&gt; 25     2024           K      61846</span></span>
+<span><span class="co">#&gt; 26     2024          01      64297</span></span>
+<span><span class="co">#&gt; 27     2024          06      66913</span></span>
+<span><span class="co">#&gt; 28     2024          12      68770</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/covid-kindergarten-1.png" alt="COVID kindergarten"><div class="figcaption">COVID kindergarten</div>
 </div>
@@ -153,28 +239,41 @@
 </h3>
 <p>Massachusetts charter enrollment has grown steadily, especially in urban areas.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">enr_2025</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">enr_2024</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_charter</span>, <span class="va">is_campus</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span></span>
 <span>    total_charter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>    n_schools <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt;   total_charter n_schools</span></span>
+<span><span class="co">#&gt; 1         45742        75</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/charter-enrollment-1.png" alt="Charter enrollment"><div class="figcaption">Charter enrollment</div>
 </div>
 <hr>
 </div>
 <div class="section level3">
-<h3 id="id_7-one-in-five-students-is-low-income">7. One in five students is low-income<a class="anchor" aria-label="anchor" href="#id_7-one-in-five-students-is-low-income"></a>
+<h3 id="id_7-over-40-of-students-are-low-income">7. Over 40% of students are low-income<a class="anchor" aria-label="anchor" href="#id_7-over-40-of-students-are-low-income"></a>
 </h3>
-<p>The “economically disadvantaged” indicator replaced free/reduced lunch in 2015, showing persistent need.</p>
+<p>The “economically disadvantaged” indicator shows persistent need across the state.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2015</span><span class="op">:</span><span class="fl">2025</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2015</span><span class="op">:</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"econ_disadv"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pct</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   end_year n_students  pct</span></span>
+<span><span class="co">#&gt; 1     2015     300814 31.5</span></span>
+<span><span class="co">#&gt; 2     2016     307055 32.1</span></span>
+<span><span class="co">#&gt; 3     2017     305117 32.0</span></span>
+<span><span class="co">#&gt; 4     2018     305915 32.1</span></span>
+<span><span class="co">#&gt; 5     2019     311478 32.6</span></span>
+<span><span class="co">#&gt; 6     2020     340403 36.7</span></span>
+<span><span class="co">#&gt; 7     2021     381612 42.0</span></span>
+<span><span class="co">#&gt; 8     2022     384044 41.8</span></span>
+<span><span class="co">#&gt; 9     2023     391248 42.0</span></span>
+<span><span class="co">#&gt; 10    2024     385697 42.2</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/econ-disadvantage-1.png" alt="Economic disadvantage"><div class="figcaption">Economic disadvantage</div>
 </div>
@@ -183,14 +282,25 @@
 <div class="section level3">
 <h3 id="id_8-english-learners-are-concentrated-in-cities">8. English learners are concentrated in cities<a class="anchor" aria-label="anchor" href="#id_8-english-learners-are-concentrated-in-cities"></a>
 </h3>
-<p>Over 10% of students statewide are English learners, but in some districts it’s 30%+.</p>
+<p>Over 13% of students statewide are English learners, but in some districts it’s 30%+.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">enr_2025</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">enr_2024</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"lep"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">pct</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pct</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                              district_name n_students  pct</span></span>
+<span><span class="co">#&gt; 1                                                  Chelsea       4403 53.7</span></span>
+<span><span class="co">#&gt; 2                                                  Lawrence       7929 51.9</span></span>
+<span><span class="co">#&gt; 3                         Lowell Community Charter Public         317 38.8</span></span>
+<span><span class="co">#&gt; 4                                                   Revere       3125 38.1</span></span>
+<span><span class="co">#&gt; 5                                               Framingham       3126 33.4</span></span>
+<span><span class="co">#&gt; 6                                                    Salem       1418 32.4</span></span>
+<span><span class="co">#&gt; 7                                                Somerville       1483 31.7</span></span>
+<span><span class="co">#&gt; 8                                                 Brockton       4716 30.5</span></span>
+<span><span class="co">#&gt; 9                                                   Malden       1884 30.5</span></span>
+<span><span class="co">#&gt; 10 Pioneer Valley Chinese Immersion Charter (District)        284 30.0</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/el-concentration-1.png" alt="EL concentration"><div class="figcaption">EL concentration</div>
 </div>
@@ -203,12 +313,43 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">suburbs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0195"</span>, <span class="st">"0139"</span>, <span class="st">"0325"</span><span class="op">)</span>  <span class="co"># Newton, Lexington, Wellesley</span></span>
 <span></span>
-<span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2015</span><span class="op">:</span><span class="fl">2025</span><span class="op">)</span></span>
+<span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2015</span><span class="op">:</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">district_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">suburbs</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    end_year district_name n_students</span></span>
+<span><span class="co">#&gt; 1      2015     Lexington       7026</span></span>
+<span><span class="co">#&gt; 2      2015        Newton      12805</span></span>
+<span><span class="co">#&gt; 3      2015     Wellesley       4903</span></span>
+<span><span class="co">#&gt; 4      2016     Lexington       7180</span></span>
+<span><span class="co">#&gt; 5      2016        Newton      12941</span></span>
+<span><span class="co">#&gt; 6      2016     Wellesley       4878</span></span>
+<span><span class="co">#&gt; 7      2017     Lexington       7310</span></span>
+<span><span class="co">#&gt; 8      2017        Newton      12862</span></span>
+<span><span class="co">#&gt; 9      2017     Wellesley       4817</span></span>
+<span><span class="co">#&gt; 10     2018     Lexington       7346</span></span>
+<span><span class="co">#&gt; 11     2018        Newton      12748</span></span>
+<span><span class="co">#&gt; 12     2018     Wellesley       4808</span></span>
+<span><span class="co">#&gt; 13     2019     Lexington       7363</span></span>
+<span><span class="co">#&gt; 14     2019        Newton      12704</span></span>
+<span><span class="co">#&gt; 15     2019     Wellesley       4746</span></span>
+<span><span class="co">#&gt; 16     2020     Lexington       7258</span></span>
+<span><span class="co">#&gt; 17     2020        Newton      12395</span></span>
+<span><span class="co">#&gt; 18     2020     Wellesley       4582</span></span>
+<span><span class="co">#&gt; 19     2021     Lexington       7032</span></span>
+<span><span class="co">#&gt; 20     2021        Newton      11941</span></span>
+<span><span class="co">#&gt; 21     2021     Wellesley       4467</span></span>
+<span><span class="co">#&gt; 22     2022     Lexington       6868</span></span>
+<span><span class="co">#&gt; 23     2022        Newton      11854</span></span>
+<span><span class="co">#&gt; 24     2022     Wellesley       4457</span></span>
+<span><span class="co">#&gt; 25     2023     Lexington       6906</span></span>
+<span><span class="co">#&gt; 26     2023        Newton      12086</span></span>
+<span><span class="co">#&gt; 27     2023     Wellesley       4476</span></span>
+<span><span class="co">#&gt; 28     2024     Lexington       6879</span></span>
+<span><span class="co">#&gt; 29     2024        Newton      12131</span></span>
+<span><span class="co">#&gt; 30     2024     Wellesley       4457</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/suburban-stable-1.png" alt="Suburban stability"><div class="figcaption">Suburban stability</div>
 </div>
@@ -219,12 +360,23 @@
 </h3>
 <p>Over 50 regional districts serve students from multiple towns, a uniquely Massachusetts approach.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">enr_2025</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">enr_2024</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"Regional"</span>, <span class="va">district_name</span><span class="op">)</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                            district_name n_students</span></span>
+<span><span class="co">#&gt; 1       Southeastern Regional Vocational Technical              1586</span></span>
+<span><span class="co">#&gt; 2                     Greater New Bedford Regional Voc Tech    1568</span></span>
+<span><span class="co">#&gt; 3  Southern Worcester County Regional Vocational             1193</span></span>
+<span><span class="co">#&gt; 4                     Silver Lake Regional School District    2689</span></span>
+<span><span class="co">#&gt; 5                                      Nashoba Regional     3350</span></span>
+<span><span class="co">#&gt; 6                        Assabet Valley Regional Voc Tech    1054</span></span>
+<span><span class="co">#&gt; 7                     Shawsheen Valley Regional Voc Tech    1355</span></span>
+<span><span class="co">#&gt; 8                                  Pentucket Regional     2890</span></span>
+<span><span class="co">#&gt; 9                                   Masconomet Regional     2256</span></span>
+<span><span class="co">#&gt; 10                          King Philip Regional          2937</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/regional-districts-1.png" alt="Regional districts"><div class="figcaption">Regional districts</div>
 </div>
@@ -235,13 +387,50 @@
 </h3>
 <p>Springfield, the state’s third-largest district, has seen Hispanic students become the majority over the past decade.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2016</span><span class="op">:</span><span class="fl">2025</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">enr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2016</span><span class="op">:</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">district_id</span> <span class="op">==</span> <span class="st">"0281"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"hispanic"</span>, <span class="st">"asian"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pct</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">subgroup</span>, <span class="va">pct</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">subgroup</span>, <span class="va">pct</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    end_year  subgroup  pct</span></span>
+<span><span class="co">#&gt; 1      2016     asian  2.6</span></span>
+<span><span class="co">#&gt; 2      2016     black 21.8</span></span>
+<span><span class="co">#&gt; 3      2016  hispanic 64.9</span></span>
+<span><span class="co">#&gt; 4      2016     white  8.7</span></span>
+<span><span class="co">#&gt; 5      2017     asian  2.8</span></span>
+<span><span class="co">#&gt; 6      2017     black 21.2</span></span>
+<span><span class="co">#&gt; 7      2017  hispanic 65.6</span></span>
+<span><span class="co">#&gt; 8      2017     white  8.4</span></span>
+<span><span class="co">#&gt; 9      2018     asian  2.8</span></span>
+<span><span class="co">#&gt; 10     2018     black 20.9</span></span>
+<span><span class="co">#&gt; 11     2018  hispanic 66.5</span></span>
+<span><span class="co">#&gt; 12     2018     white  7.6</span></span>
+<span><span class="co">#&gt; 13     2019     asian  2.8</span></span>
+<span><span class="co">#&gt; 14     2019     black 20.2</span></span>
+<span><span class="co">#&gt; 15     2019  hispanic 67.5</span></span>
+<span><span class="co">#&gt; 16     2019     white  7.3</span></span>
+<span><span class="co">#&gt; 17     2020     asian  2.9</span></span>
+<span><span class="co">#&gt; 18     2020     black 18.9</span></span>
+<span><span class="co">#&gt; 19     2020  hispanic 69.4</span></span>
+<span><span class="co">#&gt; 20     2020     white  6.6</span></span>
+<span><span class="co">#&gt; 21     2021     asian  2.7</span></span>
+<span><span class="co">#&gt; 22     2021     black 18.5</span></span>
+<span><span class="co">#&gt; 23     2021  hispanic 70.7</span></span>
+<span><span class="co">#&gt; 24     2021     white  5.9</span></span>
+<span><span class="co">#&gt; 25     2022     asian  2.8</span></span>
+<span><span class="co">#&gt; 26     2022     black 18.3</span></span>
+<span><span class="co">#&gt; 27     2022  hispanic 71.1</span></span>
+<span><span class="co">#&gt; 28     2022     white  5.5</span></span>
+<span><span class="co">#&gt; 29     2023     asian  3.0</span></span>
+<span><span class="co">#&gt; 30     2023     black 17.9</span></span>
+<span><span class="co">#&gt; 31     2023  hispanic 71.3</span></span>
+<span><span class="co">#&gt; 32     2023     white  5.4</span></span>
+<span><span class="co">#&gt; 33     2024     asian  3.1</span></span>
+<span><span class="co">#&gt; 34     2024     black 17.7</span></span>
+<span><span class="co">#&gt; 35     2024  hispanic 71.5</span></span>
+<span><span class="co">#&gt; 36     2024     white  5.3</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/springfield-demographics-1.png" alt="Springfield demographics"><div class="figcaption">Springfield demographics</div>
 </div>
@@ -257,7 +446,26 @@
 <span><span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">district_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">southcoast</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   end_year district_name n_students</span></span>
+<span><span class="co">#&gt; 1     2016    Fall River      10090</span></span>
+<span><span class="co">#&gt; 2     2016   New Bedford      12735</span></span>
+<span><span class="co">#&gt; 3     2017    Fall River      10086</span></span>
+<span><span class="co">#&gt; 4     2017   New Bedford      12696</span></span>
+<span><span class="co">#&gt; 5     2018    Fall River       9973</span></span>
+<span><span class="co">#&gt; 6     2018   New Bedford      12605</span></span>
+<span><span class="co">#&gt; 7     2019    Fall River       9839</span></span>
+<span><span class="co">#&gt; 8     2019   New Bedford      12506</span></span>
+<span><span class="co">#&gt; 9     2020    Fall River       9673</span></span>
+<span><span class="co">#&gt; 10    2020   New Bedford      12209</span></span>
+<span><span class="co">#&gt; 11    2021    Fall River       9386</span></span>
+<span><span class="co">#&gt; 12    2021   New Bedford      11844</span></span>
+<span><span class="co">#&gt; 13    2022    Fall River       9282</span></span>
+<span><span class="co">#&gt; 14    2022   New Bedford      11785</span></span>
+<span><span class="co">#&gt; 15    2023    Fall River       9225</span></span>
+<span><span class="co">#&gt; 16    2023   New Bedford      11752</span></span>
+<span><span class="co">#&gt; 17    2024    Fall River       9152</span></span>
+<span><span class="co">#&gt; 18    2024   New Bedford      11671</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/southcoast-cities-1.png" alt="SouthCoast cities"><div class="figcaption">SouthCoast cities</div>
 </div>
@@ -273,7 +481,35 @@
 <span><span class="va">enr</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">district_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">worcester_ring</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">district_name</span>, <span class="va">n_students</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   end_year district_name n_students</span></span>
+<span><span class="co">#&gt; 1     2016       Grafton       2929</span></span>
+<span><span class="co">#&gt; 2     2016    Shrewsbury       6008</span></span>
+<span><span class="co">#&gt; 3     2016   Westborough       2571</span></span>
+<span><span class="co">#&gt; 4     2017       Grafton       2972</span></span>
+<span><span class="co">#&gt; 5     2017    Shrewsbury       6097</span></span>
+<span><span class="co">#&gt; 6     2017   Westborough       2548</span></span>
+<span><span class="co">#&gt; 7     2018       Grafton       3024</span></span>
+<span><span class="co">#&gt; 8     2018    Shrewsbury       6052</span></span>
+<span><span class="co">#&gt; 9     2018   Westborough       2528</span></span>
+<span><span class="co">#&gt; 10    2019       Grafton       3063</span></span>
+<span><span class="co">#&gt; 11    2019    Shrewsbury       6104</span></span>
+<span><span class="co">#&gt; 12    2019   Westborough       2540</span></span>
+<span><span class="co">#&gt; 13    2020       Grafton       3037</span></span>
+<span><span class="co">#&gt; 14    2020    Shrewsbury       6061</span></span>
+<span><span class="co">#&gt; 15    2020   Westborough       2528</span></span>
+<span><span class="co">#&gt; 16    2021       Grafton       2928</span></span>
+<span><span class="co">#&gt; 17    2021    Shrewsbury       5885</span></span>
+<span><span class="co">#&gt; 18    2021   Westborough       2439</span></span>
+<span><span class="co">#&gt; 19    2022       Grafton       2926</span></span>
+<span><span class="co">#&gt; 20    2022    Shrewsbury       5817</span></span>
+<span><span class="co">#&gt; 21    2022   Westborough       2448</span></span>
+<span><span class="co">#&gt; 22    2023       Grafton       2944</span></span>
+<span><span class="co">#&gt; 23    2023    Shrewsbury       5777</span></span>
+<span><span class="co">#&gt; 24    2023   Westborough       2479</span></span>
+<span><span class="co">#&gt; 25    2024       Grafton       2965</span></span>
+<span><span class="co">#&gt; 26    2024    Shrewsbury       5652</span></span>
+<span><span class="co">#&gt; 27    2024   Westborough       2476</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/worcester-suburbs-1.png" alt="Worcester suburbs"><div class="figcaption">Worcester suburbs</div>
 </div>
@@ -290,7 +526,19 @@
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">district_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">western</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">end_year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">n_students</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 9 x 2</span></span>
+<span><span class="co">#&gt;   end_year total</span></span>
+<span><span class="co">#&gt;      &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1     2016  8411</span></span>
+<span><span class="co">#&gt; 2     2017  8358</span></span>
+<span><span class="co">#&gt; 3     2018  8262</span></span>
+<span><span class="co">#&gt; 4     2019  8144</span></span>
+<span><span class="co">#&gt; 5     2020  7962</span></span>
+<span><span class="co">#&gt; 6     2021  7620</span></span>
+<span><span class="co">#&gt; 7     2022  7500</span></span>
+<span><span class="co">#&gt; 8     2023  7445</span></span>
+<span><span class="co">#&gt; 9     2024  7413</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/western-ma-decline-1.png" alt="Western MA decline"><div class="figcaption">Western MA decline</div>
 </div>
@@ -301,12 +549,28 @@
 </h3>
 <p>Some districts identify nearly 25% of students for special education services, while others are under 15%.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">enr_2025</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">enr_2024</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"sped"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">pct</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pct</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                     district_name n_students  pct</span></span>
+<span><span class="co">#&gt; 1                         Lowell Middlesex Academy       106 100.0</span></span>
+<span><span class="co">#&gt; 2                   Phoenix Academy Springfield         159 100.0</span></span>
+<span><span class="co">#&gt; 3                            Springfield Intl Charter     416 28.1</span></span>
+<span><span class="co">#&gt; 4                                Greenfield          1088 27.3</span></span>
+<span><span class="co">#&gt; 5                            North Adams            546 26.0</span></span>
+<span><span class="co">#&gt; 6                                  Orange             268 25.7</span></span>
+<span><span class="co">#&gt; 7                                 Athol-Royalston      557 24.8</span></span>
+<span><span class="co">#&gt; 8                                 Ware              461 24.5</span></span>
+<span><span class="co">#&gt; 9              Gill-Montague Regional               383 24.5</span></span>
+<span><span class="co">#&gt; 10             Gateway Regional School District     342 24.2</span></span>
+<span><span class="co">#&gt; 11                                    Palmer        576 23.6</span></span>
+<span><span class="co">#&gt; 12                                 Southbridge      479 23.4</span></span>
+<span><span class="co">#&gt; 13                                     Ayer         498 23.3</span></span>
+<span><span class="co">#&gt; 14                          Mohawk Trail Regional     372 23.3</span></span>
+<span><span class="co">#&gt; 15                                   Somerset       649 22.9</span></span></code></pre></div>
 <div class="float">
 <img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/sped-gender-1.png" alt="SPED rates"><div class="figcaption">SPED rates</div>
 </div>
@@ -315,24 +579,48 @@
 <div class="section level3">
 <h3 id="id_16-four-year-graduation-rates-improving-statewide">16. Four-year graduation rates improving statewide<a class="anchor" aria-label="anchor" href="#id_16-four-year-graduation-rates-improving-statewide"></a>
 </h3>
-<p>Massachusetts’ 4-year graduation rate has climbed from 81% in 2006 to 88% in 2024, with persistent gaps by race and income.</p>
+<p>Massachusetts’ 4-year graduation rate has climbed from 80% in 2006 to 88% in 2024, with persistent gaps by race and income.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/maschooldata">maschooldata</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">grad</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_graduation_multi.html">fetch_graduation_multi</a></span><span class="op">(</span><span class="fl">2006</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span></span>
+<span><span class="va">grad</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_graduation_multi.html">fetch_graduation_multi</a></span><span class="op">(</span><span class="fl">2006</span><span class="op">:</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">grad</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"all"</span>, <span class="va">cohort_type</span> <span class="op">==</span> <span class="st">"4-year"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">end_year</span>, <span class="va">grad_rate</span>, <span class="va">cohort_count</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rate_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">grad_rate</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rate_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">grad_rate</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    end_year grad_rate cohort_count rate_pct</span></span>
+<span><span class="co">#&gt; 1      2006     0.799        74380     79.9</span></span>
+<span><span class="co">#&gt; 2      2007     0.809        75912     80.9</span></span>
+<span><span class="co">#&gt; 3      2008     0.816        75086     81.6</span></span>
+<span><span class="co">#&gt; 4      2009     0.816        74574     81.6</span></span>
+<span><span class="co">#&gt; 5      2010     0.827        75107     82.7</span></span>
+<span><span class="co">#&gt; 6      2011     0.834        75193     83.4</span></span>
+<span><span class="co">#&gt; 7      2012     0.847        73483     84.7</span></span>
+<span><span class="co">#&gt; 8      2013     0.854        72704     85.4</span></span>
+<span><span class="co">#&gt; 9      2014     0.860        71999     86.0</span></span>
+<span><span class="co">#&gt; 10     2015     0.869        71700     86.9</span></span>
+<span><span class="co">#&gt; 11     2016     0.877        73120     87.7</span></span>
+<span><span class="co">#&gt; 12     2017     0.879        74174     87.9</span></span>
+<span><span class="co">#&gt; 13     2018     0.879        74641     87.9</span></span>
+<span><span class="co">#&gt; 14     2019     0.882        73813     88.2</span></span>
+<span><span class="co">#&gt; 15     2020     0.890        72779     89.0</span></span>
+<span><span class="co">#&gt; 16     2021     0.897        72024     89.7</span></span>
+<span><span class="co">#&gt; 17     2022     0.895        70954     89.5</span></span>
+<span><span class="co">#&gt; 18     2023     0.891        72152     89.1</span></span>
+<span><span class="co">#&gt; 19     2024     0.884        73046     88.4</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/graduation-trend-1.png" alt="Graduation trend"><div class="figcaption">Graduation trend</div>
+</div>
+<hr>
 </div>
 <div class="section level3">
 <h3 id="id_17-urban-suburban-graduation-gaps-persist">17. Urban-suburban graduation gaps persist<a class="anchor" aria-label="anchor" href="#id_17-urban-suburban-graduation-gaps-persist"></a>
 </h3>
 <p>Boston (80%) trails Newton (95%) by 15 percentage points, reflecting opportunity gaps across the state.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">grad_2024</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_graduation.html">fetch_graduation</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">grad_2024</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_graduation.html">fetch_graduation</a></span><span class="op">(</span><span class="fl">2024</span>, use_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">grad_2024</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>,</span>
@@ -340,7 +628,16 @@
 <span>         <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"all"</span>,</span>
 <span>         <span class="va">cohort_type</span> <span class="op">==</span> <span class="st">"4-year"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">district_name</span>, <span class="va">grad_rate</span>, <span class="va">cohort_count</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rate_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">grad_rate</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rate_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">grad_rate</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   district_name grad_rate cohort_count rate_pct</span></span>
+<span><span class="co">#&gt; 1        Boston     0.797         3711     79.7</span></span>
+<span><span class="co">#&gt; 2        Newton     0.954          963     95.4</span></span>
+<span><span class="co">#&gt; 3   Springfield     0.786         1841     78.6</span></span>
+<span><span class="co">#&gt; 4     Worcester     0.860         1990     86.0</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/urban-suburban-grad-1.png" alt="Urban-suburban graduation"><div class="figcaption">Urban-suburban graduation</div>
+</div>
+<hr>
 </div>
 <div class="section level3">
 <h3 id="id_18-special-populations-face-graduation-challenges">18. Special populations face graduation challenges<a class="anchor" aria-label="anchor" href="#id_18-special-populations-face-graduation-challenges"></a>
@@ -352,7 +649,14 @@
 <span>         <span class="va">subgroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"english_learner"</span>, <span class="st">"special_ed"</span>, <span class="st">"low_income"</span><span class="op">)</span>,</span>
 <span>         <span class="va">cohort_type</span> <span class="op">==</span> <span class="st">"4-year"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">subgroup</span>, <span class="va">grad_rate</span>, <span class="va">cohort_count</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rate_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">grad_rate</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>rate_pct <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">grad_rate</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          subgroup grad_rate cohort_count rate_pct</span></span>
+<span><span class="co">#&gt; 1      special_ed     0.754        15039     75.4</span></span>
+<span><span class="co">#&gt; 2      low_income     0.816        39276     81.6</span></span>
+<span><span class="co">#&gt; 3 english_learner     0.667         7194     66.7</span></span></code></pre></div>
+<div class="float">
+<img src="https://almartin82.github.io/maschooldata/articles/enrollment-trends_files/figure-html/special-pop-grad-1.png" alt="Special population graduation"><div class="figcaption">Special population graduation</div>
+</div>
 <hr>
 </div>
 </div>
@@ -363,26 +667,29 @@
 <h3 id="r">R<a class="anchor" aria-label="anchor" href="#r"></a>
 </h3>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"almartin82/maschooldata"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://almartin82.github.io/maschooldata">maschooldata</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fetch one year</span></span>
-<span><span class="va">enr_2025</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="fl">2025</span><span class="op">)</span></span>
+<span><span class="va">enr_2024</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr.html">fetch_enr</a></span><span class="op">(</span><span class="fl">2024</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fetch multiple years</span></span>
-<span><span class="va">enr_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2020</span><span class="op">:</span><span class="fl">2025</span><span class="op">)</span></span>
+<span><span class="va">enr_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fetch_enr_multi.html">fetch_enr_multi</a></span><span class="op">(</span><span class="fl">2020</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># State totals</span></span>
-<span><span class="va">enr_2025</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">enr_2024</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_state</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># District breakdown</span></span>
-<span><span class="va">enr_2025</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">enr_2024</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">is_district</span>, <span class="va">subgroup</span> <span class="op">==</span> <span class="st">"total_enrollment"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">n_students</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Boston demographics</span></span>
-<span><span class="va">enr_2025</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">enr_2024</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">district_id</span> <span class="op">==</span> <span class="st">"0035"</span>, <span class="va">grade_level</span> <span class="op">==</span> <span class="st">"TOTAL"</span>,</span>
 <span>         <span class="va">subgroup</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span>, <span class="st">"hispanic"</span>, <span class="st">"asian"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">subgroup</span>, <span class="va">n_students</span>, <span class="va">pct</span><span class="op">)</span></span></code></pre></div>
@@ -390,36 +697,36 @@
 <div class="section level3">
 <h3 id="python">Python<a class="anchor" aria-label="anchor" href="#python"></a>
 </h3>
-<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="im">import</span> pymaschooldata <span class="im">as</span> ma</span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="co"># Fetch 2025 data (2024-25 school year)</span></span>
-<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>enr <span class="op">=</span> ma.fetch_enr(<span class="dv">2025</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a></span>
-<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a><span class="co"># Statewide total</span></span>
-<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>total <span class="op">=</span> enr[(enr[<span class="st">'is_state'</span>]) <span class="op">&amp;</span> (enr[<span class="st">'grade_level'</span>] <span class="op">==</span> <span class="st">'TOTAL'</span>) <span class="op">&amp;</span></span>
-<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>            (enr[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'total_enrollment'</span>)][<span class="st">'n_students'</span>].<span class="bu">sum</span>()</span>
-<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>total<span class="sc">:,}</span><span class="ss"> students"</span>)</span>
-<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a><span class="co">#&gt; 920,000 students</span></span>
-<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a></span>
-<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a><span class="co"># Get multiple years</span></span>
-<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a>enr_multi <span class="op">=</span> ma.fetch_enr_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>, <span class="dv">2025</span>])</span>
-<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a></span>
-<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a><span class="co"># Check available years</span></span>
-<span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a>years <span class="op">=</span> ma.get_available_years()</span>
-<span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data available: </span><span class="sc">{</span>years[<span class="st">'min_year'</span>]<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>years[<span class="st">'max_year'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a><span class="co">#&gt; Data available: 1994-2025</span></span>
-<span id="cb20-19"><a href="#cb20-19" tabindex="-1"></a></span>
-<span id="cb20-20"><a href="#cb20-20" tabindex="-1"></a><span class="co"># Fetch graduation rates</span></span>
-<span id="cb20-21"><a href="#cb20-21" tabindex="-1"></a>grad <span class="op">=</span> ma.fetch_graduation(<span class="dv">2024</span>)</span>
-<span id="cb20-22"><a href="#cb20-22" tabindex="-1"></a></span>
-<span id="cb20-23"><a href="#cb20-23" tabindex="-1"></a><span class="co"># State graduation rate</span></span>
-<span id="cb20-24"><a href="#cb20-24" tabindex="-1"></a>state_rate <span class="op">=</span> grad[(grad[<span class="st">'is_state'</span>]) <span class="op">&amp;</span> (grad[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'all'</span>) <span class="op">&amp;</span></span>
-<span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a>                  (grad[<span class="st">'cohort_type'</span>] <span class="op">==</span> <span class="st">'4-year'</span>)][<span class="st">'grad_rate'</span>].values[<span class="dv">0</span>]</span>
-<span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"State graduation rate: </span><span class="sc">{</span>state_rate <span class="op">*</span> <span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
-<span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a><span class="co">#&gt; State graduation rate: 88.4%</span></span>
-<span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a></span>
-<span id="cb20-29"><a href="#cb20-29" tabindex="-1"></a><span class="co"># Get multiple years of graduation data</span></span>
-<span id="cb20-30"><a href="#cb20-30" tabindex="-1"></a>grad_multi <span class="op">=</span> ma.fetch_graduation_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="im">import</span> pymaschooldata <span class="im">as</span> ma</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="co"># Fetch 2024 data (2023-24 school year)</span></span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>enr <span class="op">=</span> ma.fetch_enr(<span class="dv">2024</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="co"># Statewide total</span></span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>total <span class="op">=</span> enr[(enr[<span class="st">'is_state'</span>]) <span class="op">&amp;</span> (enr[<span class="st">'grade_level'</span>] <span class="op">==</span> <span class="st">'TOTAL'</span>) <span class="op">&amp;</span></span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>            (enr[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'total_enrollment'</span>)][<span class="st">'n_students'</span>].<span class="bu">sum</span>()</span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>total<span class="sc">:,}</span><span class="ss"> students"</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a><span class="co">#&gt; 914,959 students</span></span>
+<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a><span class="co"># Get multiple years</span></span>
+<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a>enr_multi <span class="op">=</span> ma.fetch_enr_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span>
+<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a><span class="co"># Check available years</span></span>
+<span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a>years <span class="op">=</span> ma.get_available_years()</span>
+<span id="cb21-17"><a href="#cb21-17" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Data available: </span><span class="sc">{</span>years[<span class="st">'min_year'</span>]<span class="sc">}</span><span class="ss">-</span><span class="sc">{</span>years[<span class="st">'max_year'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" tabindex="-1"></a><span class="co">#&gt; Data available: 1994-2024</span></span>
+<span id="cb21-19"><a href="#cb21-19" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" tabindex="-1"></a><span class="co"># Fetch graduation rates</span></span>
+<span id="cb21-21"><a href="#cb21-21" tabindex="-1"></a>grad <span class="op">=</span> ma.fetch_graduation(<span class="dv">2024</span>)</span>
+<span id="cb21-22"><a href="#cb21-22" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" tabindex="-1"></a><span class="co"># State graduation rate</span></span>
+<span id="cb21-24"><a href="#cb21-24" tabindex="-1"></a>state_rate <span class="op">=</span> grad[(grad[<span class="st">'is_state'</span>]) <span class="op">&amp;</span> (grad[<span class="st">'subgroup'</span>] <span class="op">==</span> <span class="st">'all'</span>) <span class="op">&amp;</span></span>
+<span id="cb21-25"><a href="#cb21-25" tabindex="-1"></a>                  (grad[<span class="st">'cohort_type'</span>] <span class="op">==</span> <span class="st">'4-year'</span>)][<span class="st">'grad_rate'</span>].values[<span class="dv">0</span>]</span>
+<span id="cb21-26"><a href="#cb21-26" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"State graduation rate: </span><span class="sc">{</span>state_rate <span class="op">*</span> <span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
+<span id="cb21-27"><a href="#cb21-27" tabindex="-1"></a><span class="co">#&gt; State graduation rate: 88.4%</span></span>
+<span id="cb21-28"><a href="#cb21-28" tabindex="-1"></a></span>
+<span id="cb21-29"><a href="#cb21-29" tabindex="-1"></a><span class="co"># Get multiple years of graduation data</span></span>
+<span id="cb21-30"><a href="#cb21-30" tabindex="-1"></a>grad_multi <span class="op">=</span> ma.fetch_graduation_multi([<span class="dv">2020</span>, <span class="dv">2021</span>, <span class="dv">2022</span>, <span class="dv">2023</span>, <span class="dv">2024</span>])</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -441,7 +748,7 @@
 <tbody>
 <tr class="odd">
 <td><strong>Enrollment</strong></td>
-<td>1994-2025</td>
+<td>1994-2024</td>
 <td>DESE Socrata API</td>
 <td>30+ years of consistent data</td>
 </tr>
@@ -487,17 +794,23 @@
 </div>
 </div>
 <div class="section level3">
+<h3 id="data-notes">Data Notes<a class="anchor" aria-label="anchor" href="#data-notes"></a>
+</h3>
+<p><strong>Data source:</strong> <a href="https://www.doe.mass.edu/" class="external-link">Massachusetts Department of Elementary and Secondary Education (DESE)</a></p>
+<p><strong>Suppression rules:</strong> Small counts may be suppressed to protect student privacy.</p>
+<p><strong>Economic indicator changes:</strong> - Pre-2015: “Low Income” (free/reduced lunch) - 2015-2021: “Economically Disadvantaged” (new definition) - 2022+: “Low Income” (reverted terminology)</p>
+<p><strong>Census Day:</strong> Data reflects October 1 enrollment counts.</p>
+<p><strong>Charter schools:</strong> Included with charter flag for filtering. District-level charter totals use special district codes.</p>
+<p><strong>Regional districts:</strong> Many multi-town districts exist with “Regional” in name, especially for vocational-technical schools.</p>
+</div>
+<div class="section level3">
 <h3 id="massachusetts-specific-notes">Massachusetts-specific notes<a class="anchor" aria-label="anchor" href="#massachusetts-specific-notes"></a>
 </h3>
 <ul>
 <li>
 <strong>District IDs:</strong> 4-digit codes (e.g., 0035 = Boston)</li>
 <li>
-<strong>Economic indicator changes:</strong> Pre-2015 used “Low Income”, 2015-2021 used “Economically Disadvantaged”, 2022+ uses “Low Income” again</li>
-<li>
-<strong>Charter schools:</strong> Included with charter flag for filtering</li>
-<li>
-<strong>Regional districts:</strong> Many multi-town districts with “Regional” in name</li>
+<strong>School IDs:</strong> 8-digit codes (district + school)</li>
 </ul>
 </div>
 </div>

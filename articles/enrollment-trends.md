@@ -57,7 +57,7 @@ have maintained relatively stable enrollment.
 
 ``` r
 gateway <- enr %>%
-  filter(is_district, district_id %in% c("0281", "0365", "0145"),
+  filter(is_district, district_id %in% c("0281", "0348", "0160"),
          subgroup == "total_enrollment", grade_level == "TOTAL")
 
 ggplot(gateway, aes(x = end_year, y = n_students, color = district_name)) +
@@ -384,3 +384,129 @@ ggplot(sped_by_district, aes(x = district_label, y = pct * 100)) +
 ```
 
 ![](enrollment-trends_files/figure-html/sped-gender-1.png)
+
+## 16. Four-year graduation rates climbing
+
+Massachusetts’ 4-year graduation rate has improved from 80% in 2006 to
+over 88% in 2024.
+
+``` r
+grad <- fetch_graduation_multi(2006:2024, use_cache = TRUE)
+
+grad_state <- grad %>%
+  filter(is_state, subgroup == "all", cohort_type == "4-year") %>%
+  select(end_year, grad_rate, cohort_count) %>%
+  mutate(rate_pct = round(grad_rate * 100, 1))
+
+ggplot(grad_state, aes(x = end_year, y = rate_pct)) +
+  geom_line(linewidth = 1.5, color = colors["total"]) +
+  geom_point(size = 3, color = colors["total"]) +
+  scale_y_continuous(limits = c(70, 100)) +
+  labs(title = "Massachusetts 4-Year Graduation Rate",
+       subtitle = "State-level graduation rate trend",
+       x = "School Year", y = "Graduation Rate (%)") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/graduation-trend-1.png)
+
+## 17. Urban-suburban graduation gap
+
+Boston (80%) trails Newton (95%) by 15 percentage points, reflecting
+opportunity gaps across the state.
+
+``` r
+grad_2024 <- fetch_graduation(2024, use_cache = TRUE)
+
+grad_districts <- grad_2024 %>%
+  filter(is_district,
+         district_name %in% c("Boston", "Springfield", "Worcester", "Newton"),
+         subgroup == "all",
+         cohort_type == "4-year") %>%
+  select(district_name, grad_rate, cohort_count) %>%
+  mutate(rate_pct = round(grad_rate * 100, 1),
+         district_label = reorder(district_name, grad_rate))
+
+ggplot(grad_districts, aes(x = district_label, y = rate_pct)) +
+  geom_col(fill = colors["total"]) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Graduation Rates: Urban vs Suburban",
+       subtitle = "2024 4-year graduation rates",
+       x = "", y = "Graduation Rate (%)") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/urban-suburban-grad-1.png)
+
+## 18. Special populations face graduation challenges
+
+English learners (67%) and students with disabilities (75%) graduate at
+lower rates than peers.
+
+``` r
+grad_special <- grad_2024 %>%
+  filter(is_state,
+         subgroup %in% c("all", "english_learner", "special_ed", "low_income"),
+         cohort_type == "4-year") %>%
+  select(subgroup, grad_rate, cohort_count) %>%
+  mutate(rate_pct = round(grad_rate * 100, 1),
+         subgroup_label = case_when(
+           subgroup == "all" ~ "All Students",
+           subgroup == "english_learner" ~ "English Learners",
+           subgroup == "special_ed" ~ "Students with Disabilities",
+           subgroup == "low_income" ~ "Low Income"
+         ),
+         subgroup_label = reorder(subgroup_label, grad_rate))
+
+ggplot(grad_special, aes(x = subgroup_label, y = rate_pct)) +
+  geom_col(fill = colors["total"]) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Graduation Rates by Subgroup",
+       subtitle = "2024 4-year graduation rates",
+       x = "", y = "Graduation Rate (%)") +
+  theme_readme()
+```
+
+![](enrollment-trends_files/figure-html/special-pop-grad-1.png)
+
+``` r
+sessionInfo()
+#> R version 4.5.2 (2025-10-31)
+#> Platform: x86_64-pc-linux-gnu
+#> Running under: Ubuntu 24.04.3 LTS
+#> 
+#> Matrix products: default
+#> BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
+#> LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.26.so;  LAPACK version 3.12.0
+#> 
+#> locale:
+#>  [1] LC_CTYPE=C.UTF-8       LC_NUMERIC=C           LC_TIME=C.UTF-8       
+#>  [4] LC_COLLATE=C.UTF-8     LC_MONETARY=C.UTF-8    LC_MESSAGES=C.UTF-8   
+#>  [7] LC_PAPER=C.UTF-8       LC_NAME=C              LC_ADDRESS=C          
+#> [10] LC_TELEPHONE=C         LC_MEASUREMENT=C.UTF-8 LC_IDENTIFICATION=C   
+#> 
+#> time zone: UTC
+#> tzcode source: system (glibc)
+#> 
+#> attached base packages:
+#> [1] stats     graphics  grDevices utils     datasets  methods   base     
+#> 
+#> other attached packages:
+#> [1] scales_1.4.0       dplyr_1.1.4        ggplot2_4.0.1      maschooldata_0.1.0
+#> 
+#> loaded via a namespace (and not attached):
+#>  [1] gtable_0.3.6       jsonlite_2.0.0     compiler_4.5.2     tidyselect_1.2.1  
+#>  [5] jquerylib_0.1.4    systemfonts_1.3.1  textshaping_1.0.4  yaml_2.3.12       
+#>  [9] fastmap_1.2.0      R6_2.6.1           labeling_0.4.3     generics_0.1.4    
+#> [13] curl_7.0.0         knitr_1.51         tibble_3.3.1       desc_1.4.3        
+#> [17] bslib_0.9.0        pillar_1.11.1      RColorBrewer_1.1-3 rlang_1.1.7       
+#> [21] cachem_1.1.0       xfun_0.55          fs_1.6.6           sass_0.4.10       
+#> [25] S7_0.2.1           cli_3.6.5          pkgdown_2.2.0      withr_3.0.2       
+#> [29] magrittr_2.0.4     digest_0.6.39      grid_4.5.2         rappdirs_0.3.4    
+#> [33] lifecycle_1.0.5    vctrs_0.7.0        evaluate_1.0.5     glue_1.8.0        
+#> [37] farver_2.1.2       codetools_0.2-20   ragg_1.5.0         foreign_0.8-90    
+#> [41] httr_1.4.7         rmarkdown_2.30     purrr_1.2.1        tools_4.5.2       
+#> [45] pkgconfig_2.0.3    htmltools_0.5.9
+```
