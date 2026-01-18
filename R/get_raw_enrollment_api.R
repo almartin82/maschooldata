@@ -101,6 +101,14 @@ get_raw_enr_api <- function(end_year) {
 #' @keywords internal
 process_enr_api <- function(api_data, end_year) {
 
+  # Filter out "Collaborative" org_type rows - these are educational collaboratives
+
+  # that are distinct from regular districts and schools. Also filter out the
+  # "COLLABORATIVE STATE TOTALS" row (org_code 09990999) which would create a
+  # duplicate State row.
+  api_data <- api_data[api_data$org_type != "Collaborative", ]
+  api_data <- api_data[api_data$org_code != "09990999", ]
+
   # Helper to safely get a column value (handles missing columns)
   safe_col <- function(df, col_name) {
     if (col_name %in% names(df)) {
