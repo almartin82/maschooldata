@@ -73,7 +73,7 @@ Springfield, Worcester, and Lowell - Massachusetts' "Gateway Cities" - have main
 
 ```{r gateway-cities}
 gateway <- enr %>%
-  filter(is_district, district_id %in% c("0281", "0365", "0145"),
+  filter(is_district, district_id %in% c("0281", "0348", "0160"),
          subgroup == "total_enrollment", grade_level == "TOTAL")
 
 ggplot(gateway, aes(x = end_year, y = n_students, color = district_name)) +
@@ -357,4 +357,85 @@ ggplot(sped_by_district, aes(x = district_label, y = pct * 100)) +
        subtitle = "Top 15 districts by percent of students receiving SPED services",
        x = "", y = "Percent SPED") +
   theme_readme()
+```
+
+## 16. Four-year graduation rates climbing
+
+Massachusetts' 4-year graduation rate has improved from 80% in 2006 to over 88% in 2024.
+
+```{r graduation-trend}
+grad <- fetch_graduation_multi(2006:2024, use_cache = TRUE)
+
+grad_state <- grad %>%
+  filter(is_state, subgroup == "all", cohort_type == "4-year") %>%
+  select(end_year, grad_rate, cohort_count) %>%
+  mutate(rate_pct = round(grad_rate * 100, 1))
+
+ggplot(grad_state, aes(x = end_year, y = rate_pct)) +
+  geom_line(linewidth = 1.5, color = colors["total"]) +
+  geom_point(size = 3, color = colors["total"]) +
+  scale_y_continuous(limits = c(70, 100)) +
+  labs(title = "Massachusetts 4-Year Graduation Rate",
+       subtitle = "State-level graduation rate trend",
+       x = "School Year", y = "Graduation Rate (%)") +
+  theme_readme()
+```
+
+## 17. Urban-suburban graduation gap
+
+Boston (80%) trails Newton (95%) by 15 percentage points, reflecting opportunity gaps across the state.
+
+```{r urban-suburban-grad}
+grad_2024 <- fetch_graduation(2024, use_cache = TRUE)
+
+grad_districts <- grad_2024 %>%
+  filter(is_district,
+         district_name %in% c("Boston", "Springfield", "Worcester", "Newton"),
+         subgroup == "all",
+         cohort_type == "4-year") %>%
+  select(district_name, grad_rate, cohort_count) %>%
+  mutate(rate_pct = round(grad_rate * 100, 1),
+         district_label = reorder(district_name, grad_rate))
+
+ggplot(grad_districts, aes(x = district_label, y = rate_pct)) +
+  geom_col(fill = colors["total"]) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Graduation Rates: Urban vs Suburban",
+       subtitle = "2024 4-year graduation rates",
+       x = "", y = "Graduation Rate (%)") +
+  theme_readme()
+```
+
+## 18. Special populations face graduation challenges
+
+English learners (67%) and students with disabilities (75%) graduate at lower rates than peers.
+
+```{r special-pop-grad}
+grad_special <- grad_2024 %>%
+  filter(is_state,
+         subgroup %in% c("all", "english_learner", "special_ed", "low_income"),
+         cohort_type == "4-year") %>%
+  select(subgroup, grad_rate, cohort_count) %>%
+  mutate(rate_pct = round(grad_rate * 100, 1),
+         subgroup_label = case_when(
+           subgroup == "all" ~ "All Students",
+           subgroup == "english_learner" ~ "English Learners",
+           subgroup == "special_ed" ~ "Students with Disabilities",
+           subgroup == "low_income" ~ "Low Income"
+         ),
+         subgroup_label = reorder(subgroup_label, grad_rate))
+
+ggplot(grad_special, aes(x = subgroup_label, y = rate_pct)) +
+  geom_col(fill = colors["total"]) +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(title = "Graduation Rates by Subgroup",
+       subtitle = "2024 4-year graduation rates",
+       x = "", y = "Graduation Rate (%)") +
+  theme_readme()
+```
+
+```{r session-info}
+sessionInfo()
 ```
