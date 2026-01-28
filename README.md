@@ -631,6 +631,70 @@ grad_2024 %>%
 
 ---
 
+### 19. MCAS Grade 10 proficiency dropped 10 points since 2019
+
+Massachusetts Grade 10 ELA proficiency dropped from 61% meeting expectations in 2019 to just 51% in 2025 - a 10 percentage point decline. The COVID pandemic disrupted learning, and scores have not recovered.
+
+```r
+library(maschooldata)
+library(dplyr)
+
+# Note: Grade 10 data only available 2019+; grades 3-8 available 2017+
+assess_multi <- fetch_assessment_multi(c(2019, 2021, 2022, 2023, 2024, 2025),
+                                        use_cache = TRUE)
+
+g10_ela <- assess_multi %>%
+  filter(is_state, grade == "10", subject == "ela", subgroup == "all")
+
+g10_ela %>%
+  select(end_year, meeting_exceeding_pct, scaled_score, student_count) %>%
+  mutate(pct_display = paste0(round(meeting_exceeding_pct * 100), "%"))
+```
+
+![MCAS COVID recovery](https://almartin82.github.io/maschooldata/articles/massachusetts-assessment_files/figure-html/covid-recovery-plot-1.png)
+
+---
+
+### 20. Achievement gaps: Asian students lead by 30+ points
+
+Asian students in Massachusetts achieve at the highest levels on MCAS. In Grade 10 Math (2025), 78% of Asian students met expectations compared to 45% statewide - a 33 percentage point gap.
+
+```r
+assess_2025 <- fetch_assessment(2025, use_cache = TRUE)
+
+g10_math_race <- assess_2025 %>%
+  filter(is_state, grade == "10", subject == "math",
+         subgroup %in% c("all", "white", "black", "hispanic", "asian"))
+
+g10_math_race %>%
+  select(subgroup, meeting_exceeding_pct, student_count) %>%
+  arrange(desc(meeting_exceeding_pct)) %>%
+  mutate(pct_display = paste0(round(meeting_exceeding_pct * 100), "%"))
+```
+
+![Achievement gaps](https://almartin82.github.io/maschooldata/articles/massachusetts-assessment_files/figure-html/achievement-gaps-plot-1.png)
+
+---
+
+### 21. English Learners face a 40-point gap
+
+Only 5% of English Learners met expectations in Grade 10 Math compared to 45% of all students - a 40 percentage point gap. This is the largest achievement gap in Massachusetts.
+
+```r
+el_gap <- assess_2025 %>%
+  filter(is_state, grade == "10", subject == "math",
+         subgroup %in% c("all", "english_learner", "special_ed", "low_income"))
+
+el_gap %>%
+  select(subgroup, meeting_exceeding_pct, student_count) %>%
+  arrange(desc(meeting_exceeding_pct)) %>%
+  mutate(pct_display = paste0(round(meeting_exceeding_pct * 100), "%"))
+```
+
+![Special populations gaps](https://almartin82.github.io/maschooldata/articles/massachusetts-assessment_files/figure-html/el-gaps-plot-1.png)
+
+---
+
 ## Installation
 
 ### R
@@ -699,6 +763,15 @@ print(f"State graduation rate: {state_rate * 100:.1f}%")
 
 # Get multiple years of graduation data
 grad_multi = ma.fetch_graduation_multi([2020, 2021, 2022, 2023, 2024])
+
+# Fetch MCAS assessment data
+assess = ma.fetch_assessment(2025)
+
+# State Grade 10 ELA proficiency
+g10_ela = assess[(assess['is_state']) & (assess['grade'] == '10') &
+                 (assess['subject'] == 'ela') & (assess['subgroup'] == 'all')]
+print(f"Grade 10 ELA proficiency: {g10_ela['meeting_exceeding_pct'].values[0] * 100:.0f}%")
+#> Grade 10 ELA proficiency: 51%
 ```
 
 ## Data availability
@@ -707,10 +780,12 @@ grad_multi = ma.fetch_graduation_multi([2020, 2021, 2022, 2023, 2024])
 |-----------|-------|--------|-------|
 | **Enrollment** | 1994-2024 | DESE Socrata API | 30+ years of consistent data |
 | **Graduation rates** | 2006-2024 | DESE Socrata API | 4-year and 5-year rates by subgroup |
+| **MCAS Assessment** | 2017-2019, 2021-2025 | DESE Socrata API | No 2020 data (COVID waiver) |
 
 Data is accessed via the Massachusetts Education-to-Career Research and Data Hub:
 - Enrollment: https://educationtocareer.data.mass.gov/d/t8td-gens
 - Graduation: https://educationtocareer.data.mass.gov/d/n2xa-p822
+- Assessment: https://educationtocareer.data.mass.gov/d/i9w6-niyt
 
 ### What's included
 
@@ -725,6 +800,12 @@ Data is accessed via the Massachusetts Education-to-Career Research and Data Hub
 - **Cohort types:** 4-year, 5-year graduation rates
 - **Subgroups:** All students, race/ethnicity, gender, English learners, special education, low income, high needs
 - **Outcomes:** Graduation rate, cohort count, still in school, GED, dropout, non-graduate completers
+
+#### MCAS Assessment data
+- **Levels:** State, District, School
+- **Grades tested:** 3-8 (ELA, Math), 5 & 8 (Science), 10 (ELA, Math, Science), HS Biology/Physics
+- **Subgroups:** 25+ categories including race/ethnicity, gender, English learners, special education, low income
+- **Measures:** Meeting/Exceeding expectations percentage, scaled scores, student growth percentiles
 
 ### Data Notes
 

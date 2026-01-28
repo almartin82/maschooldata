@@ -6,6 +6,7 @@ on:
 
 name: R-CMD-check
 
+# Runs on PRs targeting main and direct pushes to main
 permissions: read-all
 
 jobs:

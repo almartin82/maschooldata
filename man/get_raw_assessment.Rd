@@ -14,6 +14,7 @@ Data frame with assessment data including district and school records
 }
 \description{
 Downloads MCAS assessment data from the Massachusetts Education-to-Career
-Research and Data Hub (Socrata) API.
+Research and Data Hub (Socrata) API. Uses pagination to fetch all records
+since the API has a 100,000 row limit per request.
 }
 \keyword{internal}
