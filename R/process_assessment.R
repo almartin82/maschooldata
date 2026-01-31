@@ -70,10 +70,11 @@ process_assessment <- function(raw_data, end_year) {
     end_year = end_year,
 
     # Type from org_type
+    # API uses: State, Public School District, Charter District, Public School, Charter School
     type = dplyr::case_when(
       org_type == "State" ~ "State",
-      org_type == "Public School District" ~ "District",
-      org_type == "School" ~ "School",
+      org_type %in% c("Public School District", "Charter District") ~ "District",
+      org_type %in% c("Public School", "Charter School") ~ "School",
       TRUE ~ org_type
     ),
 
@@ -89,14 +90,14 @@ process_assessment <- function(raw_data, end_year) {
       dist_name
     ),
 
-    # School ID and name
+    # School ID and name - includes both Public School and Charter School
     school_id = dplyr::if_else(
-      org_type == "School",
+      org_type %in% c("Public School", "Charter School"),
       org_code,
       NA_character_
     ),
     school_name = dplyr::if_else(
-      org_type == "School",
+      org_type %in% c("Public School", "Charter School"),
       org_name,
       NA_character_
     ),
