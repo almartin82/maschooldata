@@ -1,7 +1,8 @@
 # Download raw assessment data from DESE Socrata API
 
 Downloads MCAS assessment data from the Massachusetts
-Education-to-Career Research and Data Hub (Socrata) API.
+Education-to-Career Research and Data Hub (Socrata) API. Uses pagination
+to fetch all records since the API has a 100,000 row limit per request.
 
 ## Usage
 
