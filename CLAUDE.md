@@ -124,6 +124,25 @@ If CI fails, fix the issue and push - auto-merge will trigger when checks pass.
 
 ---
 
+## Valid Filter Values (tidy enrollment via `fetch_enr(tidy = TRUE)`)
+
+### subgroup
+`total_enrollment`, `white`, `black`, `hispanic`, `asian`, `native_american`, `pacific_islander`, `multiracial`, `male`, `female`
+
+**NOT in tidy enrollment:** No special population subgroups (special_ed, lep, econ_disadv) are present in the Massachusetts tidy enrollment data. These columns are defined in code but only included if they exist in the raw data.
+
+### grade_level
+`TOTAL`, `PK`, `K`, `01`-`12`
+
+Grade columns are mapped from `grade_pk` -> `PK`, `grade_k` -> `K`, `grade_01` -> `01`, etc. The `enr_grade_aggs()` function adds computed aggregates: `K8`, `HS`, `K12`.
+
+### entity flags
+`is_state`, `is_district`, `is_campus`
+
+The `type` column has values `State`, `District`, and `Campus`. The `id_enr_aggs()` function creates boolean flags.
+
+---
+
 ## README Images from Vignettes (REQUIRED)
 
 **NEVER use `man/figures/` or `generate_readme_figs.R` for README images.**
