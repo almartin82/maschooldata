@@ -23,9 +23,16 @@ colors <- c("total" = "#2C3E50", "white" = "#3498DB", "black" = "#E74C3C",
 ```
 
 ``` r
-# Fetch data
+# Fetch data — graceful degradation if API returns errors for specific years
 enr <- fetch_enr_multi(2016:2024, use_cache = TRUE)
-enr_current <- fetch_enr(2024, use_cache = TRUE)
+
+# Use the most recent year available for current-year snapshots
+max_year <- max(enr$end_year)
+enr_current <- enr %>% filter(end_year == max_year)
+
+if (max_year < 2024) {
+  warning("2024 data unavailable from MA DOE API; using ", max_year, " as most recent year")
+}
 ```
 
 ## 1. Boston Public Schools in decline
@@ -393,6 +400,11 @@ over 88% in 2024.
 ``` r
 grad <- fetch_graduation_multi(2006:2024, use_cache = TRUE)
 
+grad_max_year <- max(grad$end_year)
+if (grad_max_year < 2024) {
+  warning("Graduation data for 2024 unavailable; most recent year is ", grad_max_year)
+}
+
 grad_state <- grad %>%
   filter(is_state, subgroup == "all", cohort_type == "4-year") %>%
   select(end_year, grad_rate, cohort_count) %>%
@@ -416,7 +428,8 @@ Boston (80%) trails Newton (95%) by 15 percentage points, reflecting
 opportunity gaps across the state.
 
 ``` r
-grad_2024 <- fetch_graduation(2024, use_cache = TRUE)
+# Use most recent year available from the multi-year fetch
+grad_2024 <- grad %>% filter(end_year == grad_max_year)
 
 grad_districts <- grad_2024 %>%
   filter(is_district,
@@ -494,7 +507,7 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] scales_1.4.0       dplyr_1.1.4        ggplot2_4.0.1      maschooldata_0.1.0
+#> [1] scales_1.4.0       dplyr_1.2.0        ggplot2_4.0.2      maschooldata_0.1.0
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] gtable_0.3.6       jsonlite_2.0.0     compiler_4.5.2     tidyselect_1.2.1  
@@ -507,6 +520,6 @@ sessionInfo()
 #> [29] magrittr_2.0.4     digest_0.6.39      grid_4.5.2         rappdirs_0.3.4    
 #> [33] lifecycle_1.0.5    vctrs_0.7.1        evaluate_1.0.5     glue_1.8.0        
 #> [37] farver_2.1.2       codetools_0.2-20   ragg_1.5.0         foreign_0.8-90    
-#> [41] httr_1.4.7         rmarkdown_2.30     purrr_1.2.1        tools_4.5.2       
+#> [41] httr_1.4.8         rmarkdown_2.30     purrr_1.2.1        tools_4.5.2       
 #> [45] pkgconfig_2.0.3    htmltools_0.5.9
 ```
