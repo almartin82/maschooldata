@@ -190,19 +190,38 @@ fetch_assessment_multi <- function(end_years,
                "\nAvailable years:", paste(available_years, collapse = ", ")))
   }
 
-  # Fetch each year
+  # Fetch each year, with graceful degradation for API failures
   results <- purrr::map(
     end_years,
     function(yr) {
-      fetch_assessment(yr,
-                       grade = grade,
-                       subject = subject,
-                       subgroup = subgroup,
-                       tidy = tidy,
-                       exclude_aggregated = exclude_aggregated,
-                       use_cache = use_cache)
+      message(paste("Fetching assessment data for", yr, "..."))
+      tryCatch(
+        fetch_assessment(yr,
+                         grade = grade,
+                         subject = subject,
+                         subgroup = subgroup,
+                         tidy = tidy,
+                         exclude_aggregated = exclude_aggregated,
+                         use_cache = use_cache),
+        error = function(e) {
+          warning(
+            "Failed to fetch assessment data for ", yr, ": ", e$message,
+            "\nSkipping year ", yr, ". Data for this year will be missing.",
+            call. = FALSE
+          )
+          NULL
+        }
+      )
     }
   )
+
+  # Remove NULLs from failed years
+  results <- purrr::compact(results)
+
+  if (length(results) == 0) {
+    stop("All requested years failed to fetch. Check API availability.",
+         call. = FALSE)
+  }
 
   # Combine
   dplyr::bind_rows(results)
