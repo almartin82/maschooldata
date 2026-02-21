@@ -43,9 +43,16 @@ colors <- c("total" = "#2C3E50", "white" = "#3498DB", "black" = "#E74C3C",
 ```
 
 ```{r fetch-data}
-# Fetch data
+# Fetch data — graceful degradation if API returns errors for specific years
 enr <- fetch_enr_multi(2016:2024, use_cache = TRUE)
-enr_current <- fetch_enr(2024, use_cache = TRUE)
+
+# Use the most recent year available for current-year snapshots
+max_year <- max(enr$end_year)
+enr_current <- enr %>% filter(end_year == max_year)
+
+if (max_year < 2024) {
+  warning("2024 data unavailable from MA DOE API; using ", max_year, " as most recent year")
+}
 ```
 
 ## 1. Boston Public Schools in decline
@@ -366,6 +373,11 @@ Massachusetts' 4-year graduation rate has improved from 80% in 2006 to over 88% 
 ```{r graduation-trend}
 grad <- fetch_graduation_multi(2006:2024, use_cache = TRUE)
 
+grad_max_year <- max(grad$end_year)
+if (grad_max_year < 2024) {
+  warning("Graduation data for 2024 unavailable; most recent year is ", grad_max_year)
+}
+
 grad_state <- grad %>%
   filter(is_state, subgroup == "all", cohort_type == "4-year") %>%
   select(end_year, grad_rate, cohort_count) %>%
@@ -386,7 +398,8 @@ ggplot(grad_state, aes(x = end_year, y = rate_pct)) +
 Boston (80%) trails Newton (95%) by 15 percentage points, reflecting opportunity gaps across the state.
 
 ```{r urban-suburban-grad}
-grad_2024 <- fetch_graduation(2024, use_cache = TRUE)
+# Use most recent year available from the multi-year fetch
+grad_2024 <- grad %>% filter(end_year == grad_max_year)
 
 grad_districts <- grad_2024 %>%
   filter(is_district,
