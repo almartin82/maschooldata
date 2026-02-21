@@ -2,6 +2,20 @@
 # These tests verify data from the MA DESE Socrata API (educationtocareer.data.mass.gov)
 # Dataset ID: i9w6-niyt
 
+# Helper: check if the assessment API is responding for a given year.
+# Returns TRUE if the API returns data, FALSE if it errors (e.g., HTTP 500).
+assess_api_available <- function(year = 2025) {
+  tryCatch({
+    url <- paste0(
+      DESE_ASSESS_SOCRATA_API,
+      "?sy=", year,
+      "&$limit=1"
+    )
+    resp <- httr::GET(url, httr::timeout(30))
+    !httr::http_error(resp)
+  }, error = function(e) FALSE)
+}
+
 # ==============================================================================
 # Unit tests (no network required)
 # ==============================================================================
@@ -74,6 +88,7 @@ test_that("MCAS assessment API is accessible", {
 test_that("get_raw_assessment downloads valid data", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   raw <- get_raw_assessment(2025)
 
@@ -94,6 +109,7 @@ test_that("get_raw_assessment downloads valid data", {
 test_that("process_assessment creates standard schema", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   raw <- get_raw_assessment(2025)
   processed <- process_assessment(raw, 2025)
@@ -129,6 +145,7 @@ test_that("process_assessment creates standard schema", {
 test_that("tidy_assessment produces correct format", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   raw <- get_raw_assessment(2025)
   processed <- process_assessment(raw, 2025)
@@ -156,6 +173,7 @@ test_that("tidy_assessment produces correct format", {
 test_that("assessment data has valid percentages", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, use_cache = TRUE)
 
@@ -175,6 +193,7 @@ test_that("assessment data has valid percentages", {
 test_that("assessment data has valid student counts", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, use_cache = TRUE)
 
@@ -190,6 +209,7 @@ test_that("assessment data has valid student counts", {
 test_that("assessment data has valid scaled scores", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, use_cache = TRUE)
 
@@ -202,6 +222,7 @@ test_that("assessment data has valid scaled scores", {
 test_that("assessment data has no Inf or NaN values", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, use_cache = TRUE)
 
@@ -224,6 +245,7 @@ test_that("assessment data has no Inf or NaN values", {
 test_that("State 2025 Grade 10 ELA All Students matches API value", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   # Verified value from API: m_plus_e_pct = 0.51, stu_cnt = 67825
   result <- fetch_assessment(2025, grade = "10", subject = "ela",
@@ -245,6 +267,7 @@ test_that("State 2025 Grade 10 ELA All Students matches API value", {
 test_that("State 2025 Grade 3 Math All Students matches API value", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   # Verified value from API: m_plus_e_pct = 0.44, stu_cnt = 66361
   result <- fetch_assessment(2025, grade = "03", subject = "math",
@@ -261,6 +284,7 @@ test_that("State 2025 Grade 3 Math All Students matches API value", {
 test_that("State 2019 pre-COVID data matches API value", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2019), "MCAS assessment API unavailable for 2019")
 
   # Verified value from API: Grade 10 ELA m_plus_e_pct = 0.61, stu_cnt = 70815
   result <- fetch_assessment(2019, grade = "10", subject = "ela",
@@ -277,6 +301,7 @@ test_that("State 2019 pre-COVID data matches API value", {
 test_that("Boston district 2025 Grade 10 ELA matches API value", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   # Verified value from API: Boston (0035) Grade 10 ELA m_plus_e_pct = 0.40
   result <- fetch_assessment(2025, grade = "10", subject = "ela",
@@ -292,6 +317,7 @@ test_that("Boston district 2025 Grade 10 ELA matches API value", {
 test_that("Achievement gap data 2025 Grade 10 ELA matches API values", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   # Verified values from API for state Grade 10 ELA:
   # White: 0.59, Black: 0.35, Hispanic: 0.31, Asian: 0.76
@@ -313,6 +339,7 @@ test_that("Achievement gap data 2025 Grade 10 ELA matches API values", {
 test_that("Special populations 2025 Grade 10 ELA matches API values", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   # Verified values from API:
   # English Learners: 0.02, Students with Disabilities: 0.17, Low Income: 0.31
@@ -336,6 +363,7 @@ test_that("Special populations 2025 Grade 10 ELA matches API values", {
 test_that("fetch_assessment returns all required columns", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, use_cache = TRUE)
 
@@ -354,6 +382,7 @@ test_that("fetch_assessment returns all required columns", {
 test_that("fetch_assessment grade filter works", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, grade = "10", use_cache = TRUE)
 
@@ -363,6 +392,7 @@ test_that("fetch_assessment grade filter works", {
 test_that("fetch_assessment subject filter works", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, subject = "math", use_cache = TRUE)
 
@@ -372,6 +402,7 @@ test_that("fetch_assessment subject filter works", {
 test_that("fetch_assessment subgroup filter works", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, subgroup = "all", use_cache = TRUE)
 
@@ -381,6 +412,7 @@ test_that("fetch_assessment subgroup filter works", {
 test_that("fetch_assessment invalid filters produce errors", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   expect_error(fetch_assessment(2025, grade = "99"), "Invalid grade")
   expect_error(fetch_assessment(2025, subject = "invalid"), "Invalid subject")
@@ -390,6 +422,7 @@ test_that("fetch_assessment invalid filters produce errors", {
 test_that("exclude_aggregated removes ALL (03-08) rows", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   # With exclude_aggregated = TRUE (default)
   result_excluded <- fetch_assessment(2025, exclude_aggregated = TRUE, use_cache = TRUE)
@@ -407,6 +440,7 @@ test_that("exclude_aggregated removes ALL (03-08) rows", {
 test_that("fetch_assessment_multi combines years correctly", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment_multi(c(2019, 2021, 2025),
                                    grade = "10", subject = "ela", subgroup = "all",
@@ -438,6 +472,7 @@ test_that("fetch_assessment_multi validates years", {
 test_that("assessment data includes all aggregation levels", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, use_cache = TRUE)
 
@@ -457,6 +492,7 @@ test_that("assessment data includes all aggregation levels", {
 test_that("assessment data has expected subjects", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, use_cache = TRUE)
 
@@ -470,6 +506,7 @@ test_that("assessment data has expected subjects", {
 test_that("assessment data has expected grades", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2025), "MCAS assessment API unavailable for 2025")
 
   result <- fetch_assessment(2025, exclude_aggregated = FALSE, use_cache = TRUE)
 
@@ -497,6 +534,7 @@ test_that("assessment data has expected grades", {
 test_that("assessment caching works correctly", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2024), "MCAS assessment API unavailable for 2024")
 
   # First call should download (use cache = TRUE so it caches)
   result1 <- fetch_assessment(2024, use_cache = TRUE)
@@ -521,6 +559,7 @@ test_that("assessment caching works correctly", {
 test_that("2021 shows COVID impact compared to 2019", {
   skip_on_cran()
   skip_if_offline()
+  skip_if(!assess_api_available(2019), "MCAS assessment API unavailable for 2019")
 
   result <- fetch_assessment_multi(c(2019, 2021),
                                    grade = "10", subject = "ela", subgroup = "all",
