@@ -114,14 +114,33 @@ fetch_enr_multi <- function(end_years, tidy = TRUE, use_cache = TRUE) {
                "\nAvailable years:", paste(range(available_years), collapse = "-")))
   }
 
-  # Fetch each year
+  # Fetch each year, with graceful degradation for API failures
+
   results <- purrr::map(
     end_years,
     function(yr) {
       message(paste("Fetching", yr, "..."))
-      fetch_enr(yr, tidy = tidy, use_cache = use_cache)
+      tryCatch(
+        fetch_enr(yr, tidy = tidy, use_cache = use_cache),
+        error = function(e) {
+          warning(
+            "Failed to fetch enrollment data for ", yr, ": ", e$message,
+            "\nSkipping year ", yr, ". Data for this year will be missing.",
+            call. = FALSE
+          )
+          NULL
+        }
+      )
     }
   )
+
+  # Remove NULLs from failed years
+  results <- purrr::compact(results)
+
+  if (length(results) == 0) {
+    stop("All requested years failed to fetch. Check API availability.",
+         call. = FALSE)
+  }
 
   # Combine
   dplyr::bind_rows(results)
